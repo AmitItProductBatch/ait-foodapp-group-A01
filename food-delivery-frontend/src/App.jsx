@@ -14,8 +14,18 @@ import {
   ExternalLink
 } from 'lucide-react'
 
-// Read base URL from Vite environment variable or fall back to default backend host port 8089
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8089/api/users'
+// Dynamically resolve backend API base URL based on browser's current hostname or environment variable
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL
+  if (envUrl && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
+    return envUrl
+  }
+  const hostname = typeof window !== 'undefined' && window.location.hostname ? window.location.hostname : 'localhost'
+  return `http://${hostname}:8089/api/users`
+}
+
+const API_BASE_URL = getApiBaseUrl()
+
 
 export default function App() {
   const [users, setUsers] = useState([])
