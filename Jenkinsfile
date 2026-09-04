@@ -34,7 +34,7 @@ pipeline {
         BACKEND_IMAGE  = "${params.DOCKER_USERNAME}/food-delivery-backend"
         FRONTEND_IMAGE = "${params.DOCKER_USERNAME}/food-delivery-frontend"
         IMAGE_TAG      = "${BUILD_NUMBER}"
-        VITE_API_URL   = "http://${params.SERVER_IP}:8089/api/users"
+        VITE_API_URL   = "http://${params.SERVER_IP}:8081/api/users"
     }
 
     options {
@@ -189,9 +189,9 @@ pipeline {
         success {
             echo "🎉 ========================================================"
             echo "🎉 Pipeline Completed Successfully!"
-            echo "👉 Frontend Application : http://${params.SERVER_IP}:3001"
-            echo "👉 Backend REST API     : http://${params.SERVER_IP}:8089/api/users"
-            echo "👉 PostgreSQL Database  : Port 3307 (DB: fooddelivery)"
+            echo "👉 Frontend Application : http://${params.SERVER_IP}:4001"
+            echo "👉 Backend REST API     : http://${params.SERVER_IP}:8081/api/users"
+            echo "👉 PostgreSQL Database  : Port 5001 (DB: fooddelivery)"
             echo "🎉 ========================================================"
         }
         failure {

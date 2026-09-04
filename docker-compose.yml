@@ -4,14 +4,14 @@ services:
   # ============================================================================
   postgres-db:
     image: postgres:16-alpine
-    container_name: fooddelivery-postgres
+    container_name: fooddelivery-postgres01
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-fooddelivery}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
-      - "${POSTGRES_PORT:-3307}:5432"
+      - "${POSTGRES_PORT:-5001}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -30,10 +30,10 @@ services:
     build:
       context: ./food-delivery-backend
       dockerfile: Dockerfile
-    container_name: fooddelivery-backend
+    container_name: fooddelivery-backend01
     restart: unless-stopped
     ports:
-      - "${BACKEND_PORT:-8089}:8080"
+      - "${BACKEND_PORT:-8081}:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/${POSTGRES_DB:-fooddelivery}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
@@ -54,11 +54,11 @@ services:
       context: ./food-delivery-frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8089/api/users}
-    container_name: fooddelivery-frontend
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8081/api/users}
+    container_name: fooddelivery-frontend01
     restart: unless-stopped
     ports:
-      - "${FRONTEND_PORT:-3001}:80"
+      - "${FRONTEND_PORT:-4001}:80"
     depends_on:
       - backend
     networks:

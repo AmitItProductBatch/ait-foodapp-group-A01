@@ -21,7 +21,7 @@ const getApiBaseUrl = () => {
     return envUrl
   }
   const hostname = typeof window !== 'undefined' && window.location.hostname ? window.location.hostname : 'localhost'
-  return `http://${hostname}:8089/api/users`
+  return `http://${hostname}:8081/api/users`
 }
 
 const API_BASE_URL = getApiBaseUrl()
@@ -329,15 +329,15 @@ export default function App() {
           <div className="info-chips">
             <div className="chip">
               <span className="chip-label">Frontend</span>
-              <span className="chip-val">Port 3001 (React + Vite)</span>
+              <span className="chip-val">Port 4001 (React + Vite)</span>
             </div>
             <div className="chip">
               <span className="chip-label">Backend</span>
-              <span className="chip-val">Port 8089 (Spring Boot 3)</span>
+              <span className="chip-val">Port 8081 (Spring Boot 3)</span>
             </div>
             <div className="chip">
               <span className="chip-label">Database</span>
-              <span className="chip-val">Port 3307 (PostgreSQL 16)</span>
+              <span className="chip-val">Port 5001 (PostgreSQL 16)</span>
             </div>
             <div className="chip">
               <span className="chip-label">Pipeline</span>

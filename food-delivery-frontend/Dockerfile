@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Accept build argument for the backend API base URL
 ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8089/api/users}
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8081/api/users}
 
 # Copy package files and install dependencies
 COPY package*.json ./
