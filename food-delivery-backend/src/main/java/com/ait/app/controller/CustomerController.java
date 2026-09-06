@@ -30,6 +30,7 @@ public class CustomerController {
     @GetMapping
     public ResponseEntity<List<Customer>> getAllUsers() {
         List<Customer> users = customerRepository.findAll();
+System.out.println("hi students");
         return ResponseEntity.ok(users);
     }
 
