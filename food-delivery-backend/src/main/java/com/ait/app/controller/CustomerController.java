@@ -33,6 +33,8 @@ public class CustomerController {
 System.out.println("hi students");
 
 System.out.println("this is git");
+
+System.out.println("this is git practical 2");
         return ResponseEntity.ok(users);
     }
 
