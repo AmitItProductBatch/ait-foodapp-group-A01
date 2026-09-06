@@ -31,6 +31,8 @@ public class CustomerController {
     public ResponseEntity<List<Customer>> getAllUsers() {
         List<Customer> users = customerRepository.findAll();
 System.out.println("hi students");
+
+System.out.println("this is git");
         return ResponseEntity.ok(users);
     }
 
