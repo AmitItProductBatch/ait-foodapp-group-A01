@@ -21,12 +21,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDto registerUser(UsersDto dto) {
-		// Validate name
+
 		if (dto.getFullName() == null || dto.getFullName().isBlank()) {
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Full name is required");
 		}
 
-		// Validate email
 		if (dto.getEmail() == null || dto.getEmail().isBlank()) {
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Email is required");
 		}
@@ -37,14 +36,12 @@ public class UserServiceImpl implements UserService {
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Invalid email format");
 		}
 
-		// Check email already registered
 		Optional<Users> optEmail = userRepository.findByEmail(dto.getEmail());
 
 		if (optEmail.isPresent()) {
 			throw new UserServiceException(HttpStatus.CONFLICT, "Email already registered");
 		}
 
-		// Validate password
 		if (dto.getPassword() == null || dto.getPassword().isBlank()) {
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Password is required");
 		}
@@ -56,19 +53,16 @@ public class UserServiceImpl implements UserService {
 					"Password must contain uppercase, lowercase, number, special character and minimum 8 characters");
 		}
 
-		// Create new user
 		Users user = new Users();
 
 		user.setFullName(dto.getFullName());
 		user.setEmail(dto.getEmail());
 		user.setPhoneNo(dto.getPhoneNo());
 
-		// Hash password
 		user.setPassword(dto.getPassword());
 
 		Users savedUser = userRepository.save(user);
 
-		// Response without password
 		UserResponseDto response = new UserResponseDto();
 		response.setUserId(savedUser.getUserId());
 		response.setFullName(savedUser.getFullName());
