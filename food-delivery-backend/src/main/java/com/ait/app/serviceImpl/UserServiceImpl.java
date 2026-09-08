@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
 		if (optional.isEmpty()) {
 			throw new UserServiceException(HttpStatus.NOT_FOUND, "User is not found for id :" + id);
 		}
-
+		
 		Users users = optional.get();
 
 		if (dto.getFullName() != null && !dto.getFullName().isBlank()) {
@@ -110,9 +110,17 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (dto.getPhoneNo() != 0) {
+			
+			if (userRepository.existsByPhoneNoAndUserIdNot(dto.getPhoneNo(), id)) {
+	            throw new UserServiceException(
+	                HttpStatus.CONFLICT,
+	                "Phone number is already assigned to another user"
+	            );
+	        }
+			
 			users.setPhoneNo(dto.getPhoneNo());
 		}
 
-	return	userRepository.save(users);
+		return userRepository.save(users);
 	}
 }
