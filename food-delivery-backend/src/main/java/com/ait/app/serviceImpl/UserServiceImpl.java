@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.ait.app.controller.CustomerController;
+import com.ait.app.dto.UpdateUserDto;
 import com.ait.app.dto.UserResponseDto;
 import com.ait.app.dto.UsersDto;
 import com.ait.app.exception.UserServiceException;
@@ -92,5 +93,26 @@ public class UserServiceImpl implements UserService {
 		userResponseDto.setEmail(user.getEmail());
 
 		return userResponseDto;
+	}
+
+	@Override
+	public Users updateUserById(int id, UpdateUserDto dto) {
+		Optional<Users> optional = userRepository.findById(id);
+
+		if (optional.isEmpty()) {
+			throw new UserServiceException(HttpStatus.NOT_FOUND, "User is not found for id :" + id);
+		}
+
+		Users users = optional.get();
+
+		if (dto.getFullName() != null && !dto.getFullName().isBlank()) {
+			users.setFullName(dto.getFullName());
+		}
+
+		if (dto.getPhoneNo() != 0) {
+			users.setPhoneNo(dto.getPhoneNo());
+		}
+
+	return	userRepository.save(users);
 	}
 }
