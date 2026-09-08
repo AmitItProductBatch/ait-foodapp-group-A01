@@ -29,7 +29,7 @@ public class UserConttroller {
 
 		userService.registerUser(user);
 		return new ResponseEntity("User Registerd Successfully", HttpStatus.CREATED);
-
+//
 	}
 
 	@GetMapping("/getUser/{id}")
