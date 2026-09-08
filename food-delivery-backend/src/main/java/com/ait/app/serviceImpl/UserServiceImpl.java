@@ -123,4 +123,29 @@ public class UserServiceImpl implements UserService {
 
 		return userRepository.save(users);
 	}
+
+	@Override
+	public void deleteUserByID(int id,UsersDto dto) {
+		 Optional<Users> optional = userRepository.findById(id);
+
+		    if (optional.isEmpty()) {
+		        throw new UserServiceException(
+		                HttpStatus.NOT_FOUND,
+		                "User is not found for id: " + id
+		        );
+		    }
+
+		    Users user = optional.get();
+
+		    if (!user.getEmail().equals(dto.getEmail())
+		            || !user.getPassword().equals(dto.getPassword())) {
+
+		        throw new UserServiceException(
+		                HttpStatus.UNAUTHORIZED,
+		                "Invalid email or password"
+		        );
+		    }
+
+		    userRepository.deleteById(id);
+	}
 }
