@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/restaurants")
 public class RestaurantController {
 
-    private final RestaurantService restaurantService;
+	private final RestaurantService restaurantService;
 
-    @Autowired
-    public RestaurantController(RestaurantService restaurantService) {
-        this.restaurantService = restaurantService;
-    }
+	@Autowired
+	public RestaurantController(RestaurantService restaurantService) {
+		this.restaurantService = restaurantService;
+	}
 
-    @PostMapping
-    public ResponseEntity<RestaurantResponse> createRestaurant(@Valid @RequestBody CreateRestaurantRequest request) {
-        RestaurantResponse response = restaurantService.createRestaurant(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
+	@PostMapping
+	public ResponseEntity<RestaurantResponse> createRestaurant(@Valid @RequestBody CreateRestaurantRequest request) {
+		RestaurantResponse response = restaurantService.createRestaurant(request);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
 }
