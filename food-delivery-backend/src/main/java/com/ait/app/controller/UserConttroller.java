@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,10 +41,11 @@ public class UserConttroller {
 
 	}
 
-	@PutMapping("/updateUser/{id}")
+	@PatchMapping("/updateUser/{id}")
 	public ResponseEntity updateUserById(@PathVariable int id, @RequestBody UpdateUserDto dto) {
 		Users updatedUser = userService.updateUserById(id, dto);
 		return new ResponseEntity(updatedUser, HttpStatus.CREATED);
 
 	}
+
 }
