@@ -3,10 +3,10 @@ package com.ait.app.serviceImpl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.ait.app.controller.CustomerController;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ait.app.dto.UpdateUserDto;
 import com.ait.app.dto.UserResponseDto;
 import com.ait.app.dto.UsersDto;
@@ -15,11 +15,18 @@ import com.ait.app.model.Users;
 import com.ait.app.repository.UserRepository;
 import com.ait.app.service.UserService;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+
 @Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
 	public UserResponseDto registerUser(UsersDto dto) {
@@ -96,56 +103,79 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public Users updateUserById(int id, UpdateUserDto dto) {
+
 		Optional<Users> optional = userRepository.findById(id);
 
 		if (optional.isEmpty()) {
-			throw new UserServiceException(HttpStatus.NOT_FOUND, "User is not found for id :" + id);
+			throw new UserServiceException(HttpStatus.NOT_FOUND, "User is not found for id " + id);
 		}
-		
-		Users users = optional.get();
+
+		StringBuilder sql = new StringBuilder("UPDATE food_delivery_users SET ");
+		boolean hasUpdate = false;
 
 		if (dto.getFullName() != null && !dto.getFullName().isBlank()) {
-			users.setFullName(dto.getFullName());
+			sql.append("full_name = :fullName, ");
+			hasUpdate = true;
 		}
 
 		if (dto.getPhoneNo() != 0) {
-			
-			if (userRepository.existsByPhoneNoAndUserIdNot(dto.getPhoneNo(), id)) {
-	            throw new UserServiceException(
-	                HttpStatus.CONFLICT,
-	                "Phone number is already assigned to another user"
-	            );
-	        }
-			
-			users.setPhoneNo(dto.getPhoneNo());
+			sql.append("phone_no = :phoneNo, ");
+			hasUpdate = true;
 		}
 
-		return userRepository.save(users);
+		if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+			sql.append("email = :email, ");
+			hasUpdate = true;
+		}
+
+		if (!hasUpdate) {
+			return optional.get();
+		}
+
+		sql.setLength(sql.length() - 2);
+
+		sql.append(" WHERE user_id = :id");
+
+		Query query = entityManager.createNativeQuery(sql.toString());
+
+		query.setParameter("id", id);
+
+		if (dto.getFullName() != null && !dto.getFullName().isBlank()) {
+			query.setParameter("fullName", dto.getFullName());
+		}
+
+		if (dto.getPhoneNo() != 0) {
+			query.setParameter("phoneNo", dto.getPhoneNo());
+		}
+
+		if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+			query.setParameter("email", dto.getEmail());
+		}
+
+		query.executeUpdate();
+
+		entityManager.clear();
+
+		return entityManager.find(Users.class, id);
 	}
 
 	@Override
-	public void deleteUserByID(int id,UsersDto dto) {
-		 Optional<Users> optional = userRepository.findById(id);
+	public void deleteUserByID(int id, UsersDto dto) {
+		Optional<Users> optional = userRepository.findById(id);
 
-		    if (optional.isEmpty()) {
-		        throw new UserServiceException(
-		                HttpStatus.NOT_FOUND,
-		                "User is not found for id: " + id
-		        );
-		    }
+		if (optional.isEmpty()) {
+			throw new UserServiceException(HttpStatus.NOT_FOUND, "User is not found for id: " + id);
+		}
 
-		    Users user = optional.get();
+		Users user = optional.get();
 
-		    if (!user.getEmail().equals(dto.getEmail())
-		            || !user.getPassword().equals(dto.getPassword())) {
+		if (!user.getEmail().equals(dto.getEmail()) || !user.getPassword().equals(dto.getPassword())) {
 
-		        throw new UserServiceException(
-		                HttpStatus.UNAUTHORIZED,
-		                "Invalid email or password"
-		        );
-		    }
+			throw new UserServiceException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+		}
 
-		    userRepository.deleteById(id);
+		userRepository.deleteById(id);
 	}
 }
