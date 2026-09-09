@@ -12,7 +12,10 @@ public interface UserService {
 	// Story no FOO-101 //
 	public UserResponseDto getUserDetails(int id);
 
-	// Story no FOO-105 //
+	// Story no FOO-104 //
 	public Users updateUserById(int id, UpdateUserDto u);
+	
+	//Story no FOO-105 //
+	public void deleteUserByID(int id, UsersDto dto);
 
 }
