@@ -1,33 +1,28 @@
 package com.ait.app.dto;
 
-public class RestaurantResponse {
+import jakarta.validation.constraints.NotBlank;
 
-	private Long id;
+public class CreateRestaurantRequest {
+
+	@NotBlank(message = "Restaurant name is required")
 	private String name;
-	private String address;
-	private String country;
-	private String contactDetails;
-	private String status;
 
-	public RestaurantResponse() {
+	@NotBlank(message = "Address is required")
+	private String address;
+
+	@NotBlank(message = "Country is required")
+	private String country;
+
+	private String contactDetails;
+
+	public CreateRestaurantRequest() {
 	}
 
-	public RestaurantResponse(Long id, String name, String address, String country, String contactDetails,
-			String status) {
-		this.id = id;
+	public CreateRestaurantRequest(String name, String address, String country, String contactDetails) {
 		this.name = name;
 		this.address = address;
 		this.country = country;
 		this.contactDetails = contactDetails;
-		this.status = status;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -60,13 +55,5 @@ public class RestaurantResponse {
 
 	public void setContactDetails(String contactDetails) {
 		this.contactDetails = contactDetails;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 }

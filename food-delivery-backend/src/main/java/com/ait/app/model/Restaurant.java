@@ -1,90 +1,94 @@
 package com.ait.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "restaurants")
 public class Restaurant {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    private String address;
+	@Column(nullable = false)
+	private String address;
 
-    private String cuisine;
+	@Column(nullable = false)
+	private String country;
 
-    private String contactNumber;
+	private String contactDetails;
 
-    private String email;
+	@Column(nullable = false)
+	private String status;
 
-    @Enumerated(EnumType.STRING)
-    private RestaurantStatus status;
+	public Restaurant() {
+	}
 
-    public Restaurant() {
-    }
+	public Restaurant(Long id, String name, String address, String cuiscountryineType, String contactDetails,
+			String status) {
+		this.id = id;
+		this.name = name;
+		this.address = address;
+		this.country = country;
+		this.contactDetails = contactDetails;
+		this.status = status;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	@PrePersist
+	protected void onCreate() {
+		if (this.status == null) {
+			this.status = "PENDING";
+		}
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	public String getAddress() {
+		return address;
+	}
 
-    public String getCuisine() {
-        return cuisine;
-    }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-    public void setCuisine(String cuisine) {
-        this.cuisine = cuisine;
-    }
+	public String getcountry() {
+		return country;
+	}
 
-    public String getContactNumber() {
-        return contactNumber;
-    }
+	public void setcountry(String country) {
+		this.country = country;
+	}
 
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
+	public String getContactDetails() {
+		return contactDetails;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setContactDetails(String contactDetails) {
+		this.contactDetails = contactDetails;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public RestaurantStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(RestaurantStatus status) {
-        this.status = status;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }
