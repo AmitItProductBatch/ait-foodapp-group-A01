@@ -44,7 +44,7 @@ public class UserConttroller {
 	@PatchMapping("/updateUser/{id}")
 	public ResponseEntity updateUserById(@PathVariable int id, @RequestBody UpdateUserDto dto) {
 		Users updatedUser = userService.updateUserById(id, dto);
-		return new ResponseEntity(updatedUser, HttpStatus.CREATED);
+		return new ResponseEntity(updatedUser, HttpStatus.OK);
 
 	}
 	
