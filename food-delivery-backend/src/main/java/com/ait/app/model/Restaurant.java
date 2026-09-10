@@ -19,7 +19,7 @@ public class Restaurant {
 	private String cuisineType;
 	private String phone;
 	private String email;
-	private String status; // PENDING, ACTIVE, INACTIVE, REJECTED
+	private String status; 
 
 	public Restaurant() {
 
