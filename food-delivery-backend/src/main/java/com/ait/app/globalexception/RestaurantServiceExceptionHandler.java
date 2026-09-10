@@ -15,6 +15,7 @@ public class RestaurantServiceExceptionHandler {
 	public ResponseEntity<String> handleRestaurantServiceException(RestaurantServiceException ex) {
 		return new ResponseEntity<>(ex.getMsg(), ex.getHttpStatusCode());
 	}
+	
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
