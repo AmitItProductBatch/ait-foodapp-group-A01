@@ -1,93 +1,84 @@
 package com.ait.app.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "restaurants")
+@Table(name = "FoodDeliveryRestaurants")
 public class Restaurant {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int restaurantId;
 
-    @Column(nullable = false)
-    private String name;
+	private String name;
+	private String address;
+	private String cuisineType;
+	private String phone;
+	private String email;
+	private String status; // PENDING, ACTIVE, INACTIVE, REJECTED
 
-    @Column(nullable = false)
-    private String address;
+	public Restaurant() {
 
-    @Column(nullable = false)
-    private String country;
+	}
 
-    private String contactDetails;
+	public int getRestaurantId() {
+		return restaurantId;
+	}
 
-    @Column(nullable = false)
-    private String status;
+	public void setRestaurantId(int restaurantId) {
+		this.restaurantId = restaurantId;
+	}
 
-    public Restaurant() {
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Restaurant(Long id, String name, String address, String country, String contactDetails, String status) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.country = country;
-        this.contactDetails = contactDetails;
-        this.status = status;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @PrePersist
-    protected void onCreate() {
-        if (this.status == null) {
-            this.status = "PENDING";
-        }
-    }
+	public String getAddress() {
+		return address;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public String getCuisineType() {
+		return cuisineType;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setCuisineType(String cuisineType) {
+		this.cuisineType = cuisineType;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getPhone() {
+		return phone;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getCountry() {
-        return country;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public String getContactDetails() {
-        return contactDetails;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public void setContactDetails(String contactDetails) {
-        this.contactDetails = contactDetails;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

@@ -1,26 +1,17 @@
 package com.ait.app.exception;
 
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 
 public class RestaurantServiceException extends RuntimeException {
 
-	private HttpStatusCode httpStatusCode;
+	private final HttpStatus status;
 
-	private String msg;
-
-	public RestaurantServiceException(HttpStatusCode httpStatusCode, String msg) {
-
-		super(msg);
-
-		this.httpStatusCode = httpStatusCode;
-		this.msg = msg;
+	public RestaurantServiceException(HttpStatus status, String message) {
+		super(message);
+		this.status = status;
 	}
 
-	public HttpStatusCode getHttpStatusCode() {
-		return httpStatusCode;
-	}
-
-	public String getMsg() {
-		return msg;
+	public HttpStatus getStatus() {
+		return status;
 	}
 }
