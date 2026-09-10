@@ -15,13 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/restaurants")
 public class RestaurantController {
+    @Autowired
+	private RestaurantService restaurantService;
 
-	private final RestaurantService restaurantService;
 
-	@Autowired
-	public RestaurantController(RestaurantService restaurantService) {
-		this.restaurantService = restaurantService;
-	}
 
 	@PostMapping
 	public ResponseEntity<RestaurantResponse> createRestaurant(@Valid @RequestBody CreateRestaurantRequest request) {
