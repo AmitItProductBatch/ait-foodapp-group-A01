@@ -22,7 +22,7 @@ public class RestaurantController {
 
 	@PostMapping
 	public ResponseEntity<RestaurantResponse> createRestaurant(@Valid @RequestBody CreateRestaurantRequest request) {
-		RestaurantResponse response = restaurantService.createRestaurant(request);
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+		restaurantService.createRestaurant(request);
+		return new ResponseEntity("Restuarant Details Save Successfully!", HttpStatus.CREATED);
 	}
 }
