@@ -44,7 +44,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         } catch (Exception ex) {
             // Throw RestaurantServiceException instead of RestaurantServiceExceptionHandler
             throw new RestaurantServiceException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Failed to create restaurant: " + ex.getMessage());
+                    "Failed to create Restaurant: " + ex.getMessage());
         }
     }
 }
