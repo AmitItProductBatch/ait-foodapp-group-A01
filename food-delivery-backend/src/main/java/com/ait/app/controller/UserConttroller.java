@@ -49,9 +49,11 @@ public class UserConttroller {
 	}
 
 	@DeleteMapping("/deleteUser/{id}")
-	public ResponseEntity deleteUser(@PathVariable int id, @RequestBody UsersDto dto) {
-		userService.deleteUserByID(id, dto);
-		return new ResponseEntity("User Deleted successfully", HttpStatus.CREATED);
+	public ResponseEntity<UserResponseDto> deleteUser(@PathVariable int id,@RequestBody UsersDto dto) {
+
+	    UserResponseDto response = userService.deleteUserByID(id, dto);
+
+	    return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	}
 
-}

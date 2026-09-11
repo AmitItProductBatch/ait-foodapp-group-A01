@@ -162,20 +162,29 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteUserByID(int id, UsersDto dto) {
-		Optional<Users> optional = userRepository.findById(id);
+	public UserResponseDto deleteUserByID(int id, UsersDto dto) {
+		 Optional<Users> optional = userRepository.findById(id);
 
-		if (optional.isEmpty()) {
-			throw new UserServiceException(HttpStatus.NOT_FOUND, "User is not found for id: " + id);
-		}
+		    if (optional.isEmpty()) {
+		        throw new UserServiceException(HttpStatus.NOT_FOUND,"User is not found for id: " + id);
+		    }
 
-		Users user = optional.get();
+		    Users user = optional.get();
 
-		if (!user.getEmail().equals(dto.getEmail()) || !user.getPassword().equals(dto.getPassword())) {
+		    if (!user.getEmail().equals(dto.getEmail()) || !user.getPassword().equals(dto.getPassword())) {
 
-			throw new UserServiceException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
-		}
+		        throw new UserServiceException( HttpStatus.UNAUTHORIZED, "Invalid email or password" );
+		    }
 
-		userRepository.deleteById(id);
+		    UserResponseDto response = new UserResponseDto();
+
+		    response.setUserId(user.getUserId());
+		    response.setFullName(user.getFullName());
+		    response.setEmail(user.getEmail());
+		    response.setPhoneNo(user.getPhoneNo());
+
+		    userRepository.deleteById(id);
+
+		    return response;
 	}
 }
