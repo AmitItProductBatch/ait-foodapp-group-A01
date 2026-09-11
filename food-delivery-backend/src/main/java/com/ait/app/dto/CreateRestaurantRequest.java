@@ -14,6 +14,8 @@ public class CreateRestaurantRequest {
 	private String country;
 
 	private String contactDetails;
+	
+	private String  email;
 
 	public CreateRestaurantRequest() {
 	}
@@ -23,6 +25,15 @@ public class CreateRestaurantRequest {
 		this.address = address;
 		this.country = country;
 		this.contactDetails = contactDetails;
+	}
+	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getName() {

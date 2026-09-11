@@ -7,6 +7,7 @@ public class RestaurantResponse {
 	private String address;
 	private String country;
 	private String contactDetails;
+	private String email;
 	private String status;
 
 	public RestaurantResponse() {
@@ -20,6 +21,15 @@ public class RestaurantResponse {
 		this.country = country;
 		this.contactDetails = contactDetails;
 		this.status = status;
+	}
+	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Long getId() {

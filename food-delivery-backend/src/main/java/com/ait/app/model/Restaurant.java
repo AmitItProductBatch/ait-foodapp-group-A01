@@ -20,6 +20,8 @@ public class Restaurant {
     private String country;
 
     private String contactDetails;
+    
+    private String email;
 
     @Column(nullable = false)
     private String status;
@@ -42,6 +44,8 @@ public class Restaurant {
             this.status = "PENDING";
         }
     }
+    
+    
 
     public Long getId() {
         return id;
@@ -50,8 +54,16 @@ public class Restaurant {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    public String getEmail() {
+		return email;
+	}
 
-    public String getName() {
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getName() {
         return name;
     }
 
