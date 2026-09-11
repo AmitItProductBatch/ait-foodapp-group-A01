@@ -25,6 +25,7 @@ public class MenuItem {
 	    @Column(nullable = false)
 	    private double halfPrice;
 	    @Column(nullable = false)
+	    
 	    private double fullPrice;
 
 	    @Column(nullable = false)
