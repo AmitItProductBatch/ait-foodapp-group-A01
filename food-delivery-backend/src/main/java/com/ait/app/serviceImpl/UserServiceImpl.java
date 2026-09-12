@@ -44,6 +44,12 @@ public class UserServiceImpl implements UserService {
 		if (!dto.getEmail().matches(emailRegex)) {
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Invalid email format");
 		}
+		
+		Optional<Users> optPhone = userRepository.existsByPhoneNo(0);
+
+		if (optPhone.isPresent()) {
+			throw new UserServiceException(HttpStatus.CONFLICT, "Phone number already registered");
+		}
 
 		Optional<Users> optEmail = userRepository.findByEmail(dto.getEmail());
 
@@ -163,28 +169,28 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDto deleteUserByID(int id, UsersDto dto) {
-		 Optional<Users> optional = userRepository.findById(id);
+		Optional<Users> optional = userRepository.findById(id);
 
-		    if (optional.isEmpty()) {
-		        throw new UserServiceException(HttpStatus.NOT_FOUND,"User is not found for id: " + id);
-		    }
+		if (optional.isEmpty()) {
+			throw new UserServiceException(HttpStatus.NOT_FOUND, "User is not found for id: " + id);
+		}
 
-		    Users user = optional.get();
+		Users user = optional.get();
 
-		    if (!user.getEmail().equals(dto.getEmail()) || !user.getPassword().equals(dto.getPassword())) {
+		if (!user.getEmail().equals(dto.getEmail()) || !user.getPassword().equals(dto.getPassword())) {
 
-		        throw new UserServiceException( HttpStatus.UNAUTHORIZED, "Invalid email or password" );
-		    }
+			throw new UserServiceException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+		}
 
-		    UserResponseDto response = new UserResponseDto();
+		UserResponseDto response = new UserResponseDto();
 
-		    response.setUserId(user.getUserId());
-		    response.setFullName(user.getFullName());
-		    response.setEmail(user.getEmail());
-		    response.setPhoneNo(user.getPhoneNo());
+		response.setUserId(user.getUserId());
+		response.setFullName(user.getFullName());
+		response.setEmail(user.getEmail());
+		response.setPhoneNo(user.getPhoneNo());
 
-		    userRepository.deleteById(id);
+		userRepository.deleteById(id);
 
-		    return response;
+		return response;
 	}
 }

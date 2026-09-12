@@ -29,10 +29,9 @@ public class AddressServiceImpl implements AddressService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@PersistenceContext
 	private EntityManager entityManager;
-
 
 	@Override
 	public AddressResponseDto createAddress(int userId, AddressDto addressDto) {
@@ -64,20 +63,19 @@ public class AddressServiceImpl implements AddressService {
 
 		return response;
 	}
-	
-	
+
 	@Override
 	@Transactional
-	public Address updateAddress(int addressid, AddressDto dto) {
+	public Address updateAddress(int addressid, int userId, AddressDto dto) {
 
-		Optional<Address> optional = addressRepository.findById(addressid);
+		Optional<Address> optional = addressRepository.findByAddressIdAndUserUserId(addressid, userId);
 
 		if (optional.isEmpty()) {
-			throw new AddressServiceException("Address not found for id " + addressid, HttpStatus.NOT_FOUND);
+			throw new AddressServiceException("Address not found for id " + addressid + " for user id " + userId,
+					HttpStatus.NOT_FOUND);
 		}
 
 		StringBuilder sql = new StringBuilder("UPDATE addresses SET ");
-
 		boolean hasUpdate = false;
 
 		if (dto.getLabel() != null && !dto.getLabel().isBlank()) {
@@ -105,16 +103,13 @@ public class AddressServiceImpl implements AddressService {
 			hasUpdate = true;
 		}
 
-
 		if (dto.getPostalCode() != null && !dto.getPostalCode().isBlank()) {
-		    sql.append("postal_code = :postalCode, ");
-		    hasUpdate = true;
+			sql.append("postal_code = :postalCode, ");
+			hasUpdate = true;
 		}
-		
-		
-		if (dto.getDeliveryInstructions() != null && !dto.getDeliveryInstructions().isBlank()) {
 
-			sql.append("delivery_Instructions = :deliveryInstructions, ");
+		if (dto.getDeliveryInstructions() != null && !dto.getDeliveryInstructions().isBlank()) {
+			sql.append("delivery_instructions = :deliveryInstructions, ");
 			hasUpdate = true;
 		}
 
@@ -124,11 +119,12 @@ public class AddressServiceImpl implements AddressService {
 
 		sql.setLength(sql.length() - 2);
 
-		sql.append(" WHERE address_id = :id");
+		sql.append(" WHERE address_id = :id AND user_id = :userId");
 
 		Query query = entityManager.createNativeQuery(sql.toString());
 
 		query.setParameter("id", addressid);
+		query.setParameter("userId", userId);
 
 		if (dto.getLabel() != null && !dto.getLabel().isBlank()) {
 			query.setParameter("label", dto.getLabel());
@@ -155,7 +151,6 @@ public class AddressServiceImpl implements AddressService {
 		}
 
 		if (dto.getDeliveryInstructions() != null && !dto.getDeliveryInstructions().isBlank()) {
-
 			query.setParameter("deliveryInstructions", dto.getDeliveryInstructions());
 		}
 
@@ -165,8 +160,6 @@ public class AddressServiceImpl implements AddressService {
 
 		return entityManager.find(Address.class, addressid);
 	}
-	
-	
 
 	@Override
 	public void deleteAddressByA_IdAndU_Id(int addressId, int userId) {
