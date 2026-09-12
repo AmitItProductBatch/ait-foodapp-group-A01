@@ -2,11 +2,10 @@ package com.ait.app.serviceImpl;
 
 
 import java.util.Optional;
-
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import com.ait.app.dto.MenuItemDto;
 import com.ait.app.exception.MenuItemServiceException;
 import com.ait.app.exception.UserServiceException;
@@ -15,7 +14,6 @@ import com.ait.app.model.Restaurant;
 import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.repository.RestaurantRepository;
 import com.ait.app.service.MenuService;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 @Service
@@ -70,7 +68,7 @@ public class MenuServiceImpl implements MenuService {
 	        return savedItem.getId();
 
 	}
-
+	@Transactional
 	@Override
 	public String updateMenuItemById(long restaurantId, long itemId, String field, String value) {
 		String query = "UPDATE menu_items SET " + field + " = :value WHERE id = :itemId "

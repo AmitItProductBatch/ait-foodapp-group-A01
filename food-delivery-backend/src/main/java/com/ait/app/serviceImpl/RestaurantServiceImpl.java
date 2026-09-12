@@ -1,6 +1,7 @@
 package com.ait.app.serviceImpl;
 
 import com.ait.app.dto.RestaurantRequest;
+import org.springframework.transaction.annotation.Transactional;
 import com.ait.app.dto.RestaurantResponse;
 import com.ait.app.exception.RestaurantServiceException;
 import com.ait.app.model.Restaurant;
@@ -51,8 +52,10 @@ public class RestaurantServiceImpl implements RestaurantService {
 		restaurant.setName(request.getName());
 		restaurant.setAddress(request.getAddress());
 		restaurant.setCountry(request.getCountry());
+		restaurant.setEmail(request.getEmail());
 		restaurant.setContactDetails(request.getContactDetails());
 		restaurant.setStatus("PENDING");
+		restaurant.setUser(user);
 
 		Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
@@ -62,6 +65,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 		response.setName(savedRestaurant.getName());
 		response.setAddress(savedRestaurant.getAddress());
 		response.setCountry(savedRestaurant.getCountry());
+		response.setEmail(savedRestaurant.getEmail());
 		response.setContactDetails(savedRestaurant.getContactDetails());
 		response.setStatus(savedRestaurant.getStatus());
 
@@ -84,6 +88,10 @@ public class RestaurantServiceImpl implements RestaurantService {
 		restaurantResponse.setStatus(restaurant.getStatus());
 		restaurantResponse.setCountry(restaurant.getCountry());
 		restaurantResponse.setUserId(restaurant.getUser().getUserId());
+		if (restaurant.getUser() != null) {
+			restaurantResponse.setUserId(restaurant.getUser().getUserId());
+		}
+
 		return restaurantResponse;
 	}
 
@@ -104,6 +112,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 			restaurantResponse.setAddress(restaurant.getAddress());
 			restaurantResponse.setStatus(restaurant.getStatus());
 			restaurantResponse.setCountry(restaurant.getCountry());
+			restaurantResponse.setUserId(restaurant.getUser().getUserId());
 
 			responses.add(restaurantResponse);
 
@@ -111,6 +120,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 		return responses;
 	}
 
+	@Transactional
 	@Override
 	public String updateById(String field, String value, long id) {
 		String query = "UPDATE restaurants SET " + field + " = :value WHERE id = :id";
