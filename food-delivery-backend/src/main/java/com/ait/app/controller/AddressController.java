@@ -10,18 +10,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class AddressController {
 
-    @Autowired
-    private AddressService addressService;
+	@Autowired
+	private AddressService addressService;
 
-    @PostMapping("/{userId}/addresses")
-    public ResponseEntity<AddressResponseDto> createAddress(
-            @PathVariable int userId, 
-            @Valid @RequestBody AddressDto addressDto) {
-        
-        AddressResponseDto createdAddress = addressService.createAddress(userId, addressDto);
-        return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
-    }
+	@PostMapping("/{userId}/addresses")
+	public ResponseEntity<AddressResponseDto> createAddress(@PathVariable int userId,
+			@Valid @RequestBody AddressDto addressDto) {
+
+		AddressResponseDto createdAddress = addressService.createAddress(userId, addressDto);
+		return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
+	}
+
+	@PatchMapping("/update/{addressId}")
+	public ResponseEntity updateAddress(@PathVariable int addressId, @RequestBody AddressDto dto) {
+		addressService.updateAddress(addressId, dto);
+
+		return new ResponseEntity("Address Updated For Address Id : " + addressId, HttpStatus.OK);
+
+	}	
+	
+	@DeleteMapping("/delete/{addressId}/{userId}")
+	public ResponseEntity deleteAddress(@PathVariable int addressId, @PathVariable int userId) {
+		addressService.deleteAddressByA_IdAndU_Id(addressId, userId);
+		return new ResponseEntity("Address deleted successfully for id :" + addressId + " User Id :" + userId,
+				HttpStatus.OK);
+
+	}
+
 }
