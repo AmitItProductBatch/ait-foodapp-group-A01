@@ -24,4 +24,21 @@ public class AddressController {
         AddressResponseDto createdAddress = addressService.createAddress(userId, addressDto);
         return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
     }
+    @PatchMapping("/update/{userId}/{addressId}")
+    public ResponseEntity<AddressResponseDto> updateAddress(@PathVariable int userId,@RequestBody AddressDto addressDto){
+		AddressResponseDto addressResponseDto = addressService.updateAddress(userId, userId, addressDto);
+    	
+    	return new ResponseEntity<>(addressResponseDto,HttpStatus.OK);
+    	
+    	
+    	
+    }
+    @DeleteMapping("/deleteAddress/{userId}/{addressId}")
+   	public ResponseEntity deleteAddressByA_IdAndU_Id(@PathVariable int userId, @PathVariable int addressId) {
+   		addressService.deleteAddressByA_IdAndU_Id(addressId, userId);
+   		return new ResponseEntity("Address deleted successfully for User id :" + userId + " Address Id :" + addressId,
+   				HttpStatus.OK);
+
+   	}
+
 }
