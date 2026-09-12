@@ -9,18 +9,20 @@ public class RestaurantResponse {
 	private String contactDetails;
 	private String email;
 	private String status;
+	private int userId;
 
 	public RestaurantResponse() {
 	}
 
 	public RestaurantResponse(Long id, String name, String address, String country, String contactDetails,
-			String status) {
+			String status,int userId) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.country = country;
 		this.contactDetails = contactDetails;
 		this.status = status;
+		this.userId = userId;
 	}
 	
 
@@ -78,5 +80,12 @@ public class RestaurantResponse {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public int getUserId() {
+	    return userId;
+	}
+
+	public void setUserId(int userId) {
+	    this.userId = userId;
 	}
 }

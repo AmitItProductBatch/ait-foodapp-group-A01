@@ -11,6 +11,7 @@ import com.ait.app.dto.UpdateUserDto;
 import com.ait.app.dto.UserResponseDto;
 import com.ait.app.dto.UsersDto;
 import com.ait.app.exception.UserServiceException;
+import com.ait.app.globalexception.GlobalException;
 import com.ait.app.model.Users;
 import com.ait.app.repository.UserRepository;
 import com.ait.app.service.UserService;
@@ -22,11 +23,17 @@ import jakarta.persistence.Query;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final GlobalException globalException;
+
 	@Autowired
 	private UserRepository userRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
+    UserServiceImpl(GlobalException globalException) {
+        this.globalException = globalException;
+    }
 
 	@Override
 	public UserResponseDto registerUser(UsersDto dto) {
@@ -50,7 +57,10 @@ public class UserServiceImpl implements UserService {
 		if (optEmail.isPresent()) {
 			throw new UserServiceException(HttpStatus.CONFLICT, "Email already registered");
 		}
-
+		
+		if(userRepository.existsByPhoneNo(dto.getPhoneNo()){
+			throw new UserServiceException(HttpStatus.CONFLICT, "Phon number already registered");
+		}
 		if (dto.getPassword() == null || dto.getPassword().isBlank()) {
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Password is required");
 		}

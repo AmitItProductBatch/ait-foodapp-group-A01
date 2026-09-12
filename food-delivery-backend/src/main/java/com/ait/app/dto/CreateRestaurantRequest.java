@@ -16,6 +16,10 @@ public class CreateRestaurantRequest {
 	private String contactDetails;
 	
 	private String  email;
+	
+	private int userId;
+	
+	
 
 	public CreateRestaurantRequest() {
 	}
@@ -66,5 +70,12 @@ public class CreateRestaurantRequest {
 
 	public void setContactDetails(String contactDetails) {
 		this.contactDetails = contactDetails;
+	}
+	public int getUserId() {
+	    return userId;
+	}
+
+	public void setUserId(int userId) {
+	    this.userId = userId;
 	}
 }

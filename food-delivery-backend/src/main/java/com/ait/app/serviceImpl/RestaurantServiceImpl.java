@@ -4,8 +4,13 @@ import com.ait.app.dto.CreateRestaurantRequest;
 import com.ait.app.dto.RestaurantResponse;
 import com.ait.app.exception.RestaurantServiceException;
 import com.ait.app.model.Restaurant;
+import com.ait.app.model.Users;
 import com.ait.app.repository.RestaurantRepository;
+import com.ait.app.repository.UserRepository;
 import com.ait.app.service.RestaurantService;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,26 +26,28 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Autowired
 	private RestaurantRepository restaurantRepository;
 
+	@Autowired
+	private UserRepository userRepository;
+
+	@PersistenceContext
+	EntityManager entityManager;
+
 	@Override
 	public RestaurantResponse createRestaurant(CreateRestaurantRequest request) {
 		try {
-			
+
 			if (restaurantRepository.existsByEmail(request.getEmail())) {
-			    throw new RestaurantServiceException(
-			            HttpStatus.CONFLICT,
-			            "Email already exists"
-			    );
+				throw new RestaurantServiceException(HttpStatus.CONFLICT, "Email already exists");
 			}
 
-			if (restaurantRepository.existsByContactDetails(
-			        request.getContactDetails())) {
+			if (restaurantRepository.existsByContactDetails(request.getContactDetails())) {
 
-			    throw new RestaurantServiceException(
-			            HttpStatus.CONFLICT,
-			            "Contact details already exists"
-			    );
+				throw new RestaurantServiceException(HttpStatus.CONFLICT, "Contact details already exists");
 			}
 			Restaurant restaurant = new Restaurant();
+
+			Users user = userRepository.findById(request.getUserId())
+					.orElseThrow(() -> new RestaurantServiceException(HttpStatus.NOT_FOUND, "User not found"));
 			restaurant.setName(request.getName());
 			restaurant.setAddress(request.getAddress());
 			restaurant.setCountry(request.getCountry());
@@ -80,6 +87,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 		restaurantResponse.setAddress(restaurant.getAddress());
 		restaurantResponse.setStatus(restaurant.getStatus());
 		restaurantResponse.setCountry(restaurant.getCountry());
+		restaurantResponse.setUserId(restaurant.getUser().getUserId());
 		return restaurantResponse;
 	}
 
@@ -106,4 +114,29 @@ public class RestaurantServiceImpl implements RestaurantService {
 		}
 		return responses;
 	}
+
+	@Override
+	public String updateById(String field, String value, long id) {
+		String query = "UPDATE restaurants SET " + field + " = :value WHERE id = :id";
+
+		int result = entityManager.createNativeQuery(query).setParameter("value", value).setParameter("id", id)
+				.executeUpdate();
+		if (result == 0) {
+			throw new RestaurantServiceException(HttpStatus.NOT_FOUND, "Restaurant not exist");
+
+		}
+
+		return "Restaurant updated successfully";
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		Restaurant restaurant = restaurantRepository.findById(id)
+				.orElseThrow(
+				() -> new RestaurantServiceException(HttpStatus.NOT_FOUND, "Restaurant not found with id: " + id));
+
+		restaurantRepository.delete(restaurant);
+
+	}
+
 }
