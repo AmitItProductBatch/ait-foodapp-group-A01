@@ -71,7 +71,6 @@ public class MenuServiceImpl implements MenuService {
 
 	}
 
-
 	@Override
 	public String updateMenuItemById(long restaurantId, long itemId, String field, String value) {
 		String query = "UPDATE menu_items SET " + field + " = :value WHERE id = :itemId "

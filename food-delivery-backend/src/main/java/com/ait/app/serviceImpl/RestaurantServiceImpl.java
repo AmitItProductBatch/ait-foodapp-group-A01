@@ -1,6 +1,6 @@
 package com.ait.app.serviceImpl;
 
-import com.ait.app.dto.CreateRestaurantRequest;
+import com.ait.app.dto.RestaurantRequest;
 import com.ait.app.dto.RestaurantResponse;
 import com.ait.app.exception.RestaurantServiceException;
 import com.ait.app.model.Restaurant;
@@ -33,43 +33,39 @@ public class RestaurantServiceImpl implements RestaurantService {
 	EntityManager entityManager;
 
 	@Override
-	public RestaurantResponse createRestaurant(CreateRestaurantRequest request) {
-		try {
+	public RestaurantResponse createRestaurant(RestaurantRequest request) {
 
-			if (restaurantRepository.existsByEmail(request.getEmail())) {
-				throw new RestaurantServiceException(HttpStatus.CONFLICT, "Email already exists");
-			}
-
-			if (restaurantRepository.existsByContactDetails(request.getContactDetails())) {
-
-				throw new RestaurantServiceException(HttpStatus.CONFLICT, "Contact details already exists");
-			}
-			Restaurant restaurant = new Restaurant();
-
-			Users user = userRepository.findById(request.getUserId())
-					.orElseThrow(() -> new RestaurantServiceException(HttpStatus.NOT_FOUND, "User not found"));
-			restaurant.setName(request.getName());
-			restaurant.setAddress(request.getAddress());
-			restaurant.setCountry(request.getCountry());
-			restaurant.setContactDetails(request.getContactDetails());
-			restaurant.setStatus("PENDING");
-
-			Restaurant savedRestaurant = restaurantRepository.save(restaurant);
-
-			RestaurantResponse response = new RestaurantResponse();
-			response.setId(savedRestaurant.getId());
-			response.setName(savedRestaurant.getName());
-			response.setAddress(savedRestaurant.getAddress());
-			response.setCountry(savedRestaurant.getCountry());
-			response.setContactDetails(savedRestaurant.getContactDetails());
-			response.setStatus(savedRestaurant.getStatus());
-
-			return response;
-		} catch (Exception ex) {
-			// Throw RestaurantServiceException instead of RestaurantServiceExceptionHandler
-			throw new RestaurantServiceException(HttpStatus.INTERNAL_SERVER_ERROR,
-					"Failed to create Restaurant: " + ex.getMessage());
+		if (restaurantRepository.existsByEmail(request.getEmail())) {
+			throw new RestaurantServiceException(HttpStatus.CONFLICT, "Email already exists");
 		}
+
+		if (restaurantRepository.existsByContactDetails(request.getContactDetails())) {
+			throw new RestaurantServiceException(HttpStatus.CONFLICT, "Contact details already exists");
+		}
+
+		Users user = userRepository.findById(request.getUserId())
+				.orElseThrow(() -> new RestaurantServiceException(HttpStatus.NOT_FOUND, "User not found"));
+
+		Restaurant restaurant = new Restaurant();
+
+		restaurant.setName(request.getName());
+		restaurant.setAddress(request.getAddress());
+		restaurant.setCountry(request.getCountry());
+		restaurant.setContactDetails(request.getContactDetails());
+		restaurant.setStatus("PENDING");
+
+		Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+
+		RestaurantResponse response = new RestaurantResponse();
+
+		response.setId(savedRestaurant.getId());
+		response.setName(savedRestaurant.getName());
+		response.setAddress(savedRestaurant.getAddress());
+		response.setCountry(savedRestaurant.getCountry());
+		response.setContactDetails(savedRestaurant.getContactDetails());
+		response.setStatus(savedRestaurant.getStatus());
+
+		return response;
 	}
 
 	@Override
@@ -131,8 +127,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	@Override
 	public void deleteById(Long id) {
-		Restaurant restaurant = restaurantRepository.findById(id)
-				.orElseThrow(
+		Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
 				() -> new RestaurantServiceException(HttpStatus.NOT_FOUND, "Restaurant not found with id: " + id));
 
 		restaurantRepository.delete(restaurant);

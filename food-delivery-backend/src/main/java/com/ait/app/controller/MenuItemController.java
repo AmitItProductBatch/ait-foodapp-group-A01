@@ -16,26 +16,23 @@ import com.ait.app.service.MenuService;
 @RestController
 @RequestMapping("/api/resturants")
 public class MenuItemController {
-	
+
 	@Autowired
 	private MenuService menuService;
-	
+
 	@PostMapping("/{restaurantId}")
-	public ResponseEntity AddMenuItem( @PathVariable long restaurantId, @RequestBody MenuItemDto dto) {
+	public ResponseEntity AddMenuItem(@PathVariable long restaurantId, @RequestBody MenuItemDto dto) {
 		long menuItemId = menuService.addMenuItem(restaurantId, dto);
-		return new ResponseEntity<>("Item added for restaurant successfully",HttpStatus.CREATED);
+		return new ResponseEntity<>("Item added for restaurant successfully", HttpStatus.CREATED);
 	}
+
 	@PatchMapping("/{restaurantId}/menu/{itemId}")
-	public ResponseEntity<String> updateMenuItemById(
-	        @PathVariable long restaurantId,
-	        @PathVariable long itemId,
-	        @PathVariable String field,
-	        @PathVariable String value) {
+	public ResponseEntity<String> updateMenuItemById(@PathVariable long restaurantId, @PathVariable long itemId,
+			@PathVariable String field, @PathVariable String value) {
 
-	    String response = menuService.updateMenuItemById(
-	            restaurantId, itemId, field, value);
+		String response = menuService.updateMenuItemById(restaurantId, itemId, field, value);
 
-	    return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
+
 }

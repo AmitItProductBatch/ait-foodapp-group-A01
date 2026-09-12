@@ -1,6 +1,6 @@
 package com.ait.app.controller;
 
-import com.ait.app.dto.CreateRestaurantRequest;
+import com.ait.app.dto.RestaurantRequest;
 import com.ait.app.dto.RestaurantResponse;
 import com.ait.app.service.RestaurantService;
 import jakarta.validation.Valid;
@@ -19,7 +19,7 @@ public class RestaurantController {
 	private RestaurantService restaurantService;
 
 	@PostMapping
-	public ResponseEntity<RestaurantResponse> createRestaurant(@Valid @RequestBody CreateRestaurantRequest request) {
+	public ResponseEntity<RestaurantResponse> createRestaurant(@Valid @RequestBody RestaurantRequest request) {
 		restaurantService.createRestaurant(request);
 		return new ResponseEntity("Restuarant Details Save Successfully!", HttpStatus.CREATED);
 	}

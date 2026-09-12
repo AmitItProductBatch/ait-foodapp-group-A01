@@ -23,7 +23,7 @@ import jakarta.persistence.Query;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final GlobalException globalException;
+	private final GlobalException globalException;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -31,9 +31,9 @@ public class UserServiceImpl implements UserService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-    UserServiceImpl(GlobalException globalException) {
-        this.globalException = globalException;
-    }
+	UserServiceImpl(GlobalException globalException) {
+		this.globalException = globalException;
+	}
 
 	@Override
 	public UserResponseDto registerUser(UsersDto dto) {
@@ -57,9 +57,8 @@ public class UserServiceImpl implements UserService {
 		if (optEmail.isPresent()) {
 			throw new UserServiceException(HttpStatus.CONFLICT, "Email already registered");
 		}
-		
-		if(userRepository.existsByPhoneNo(dto.getPhoneNo()){
-			throw new UserServiceException(HttpStatus.CONFLICT, "Phon number already registered");
+		if (userRepository.existsByPhoneNo(dto.getPhoneNo())) {
+			throw new UserServiceException(HttpStatus.CONFLICT, "Phone number already registered");
 		}
 		if (dto.getPassword() == null || dto.getPassword().isBlank()) {
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Password is required");
@@ -173,28 +172,28 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDto deleteUserByID(int id, UsersDto dto) {
-		 Optional<Users> optional = userRepository.findById(id);
+		Optional<Users> optional = userRepository.findById(id);
 
-		    if (optional.isEmpty()) {
-		        throw new UserServiceException(HttpStatus.NOT_FOUND,"User is not found for id: " + id);
-		    }
+		if (optional.isEmpty()) {
+			throw new UserServiceException(HttpStatus.NOT_FOUND, "User is not found for id: " + id);
+		}
 
-		    Users user = optional.get();
+		Users user = optional.get();
 
-		    if (!user.getEmail().equals(dto.getEmail()) || !user.getPassword().equals(dto.getPassword())) {
+		if (!user.getEmail().equals(dto.getEmail()) || !user.getPassword().equals(dto.getPassword())) {
 
-		        throw new UserServiceException( HttpStatus.UNAUTHORIZED, "Invalid email or password" );
-		    }
+			throw new UserServiceException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+		}
 
-		    UserResponseDto response = new UserResponseDto();
+		UserResponseDto response = new UserResponseDto();
 
-		    response.setUserId(user.getUserId());
-		    response.setFullName(user.getFullName());
-		    response.setEmail(user.getEmail());
-		    response.setPhoneNo(user.getPhoneNo());
+		response.setUserId(user.getUserId());
+		response.setFullName(user.getFullName());
+		response.setEmail(user.getEmail());
+		response.setPhoneNo(user.getPhoneNo());
 
-		    userRepository.deleteById(id);
+		userRepository.deleteById(id);
 
-		    return response;
+		return response;
 	}
 }
