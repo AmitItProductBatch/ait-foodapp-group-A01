@@ -33,7 +33,7 @@ public class AddressController {
     	
     	
     }
-    @DeleteMapping("/delete/{userId}/{addressId}")
+    @DeleteMapping("/deleteAddress/{userId}/{addressId}")
    	public ResponseEntity deleteAddressByA_IdAndU_Id(@PathVariable int userId, @PathVariable int addressId) {
    		addressService.deleteAddressByA_IdAndU_Id(addressId, userId);
    		return new ResponseEntity("Address deleted successfully for User id :" + userId + " Address Id :" + addressId,
