@@ -18,14 +18,17 @@ public class MenuItem {
 
 	 	@Column(nullable = false)
 	    private String name;
+	 	
 	    @Column(nullable = false)
 	    private String description;
+	    
 	    @Column(nullable = false)
 	    private String type;
+	    
 	    @Column(nullable = false)
 	    private double halfPrice;
-	    @Column(nullable = false)
 	    
+	    @Column(nullable = false)
 	    private double fullPrice;
 
 	    @Column(nullable = false)
@@ -34,17 +37,13 @@ public class MenuItem {
 	    @ManyToOne
 	    @JoinColumn(name = "restaurant_id", nullable = false)
 	    private Restaurant restaurant;
+	    
+	    
 
 	    public MenuItem() {
 	    }
 
-	    public Long getId() {
-	        return id;
-	    }
-
-	    public void setId(Long id) {
-	        this.id = id;
-	    }
+	    
 
 	    public String getName() {
 	        return name;
@@ -76,6 +75,10 @@ public class MenuItem {
 			return fullPrice;
 		}
 
+		
+
+
+
 		public void setFullPrice(double fullPrice) {
 			this.fullPrice = fullPrice;
 		}
@@ -84,13 +87,23 @@ public class MenuItem {
 	        return available;
 	    }
 
-	    public void setId(long id) {
-			this.id = id;
-		}
+	
 
 		public String getType() {
 			return type;
 		}
+
+		public long getId() {
+			return id;
+		}
+
+
+
+		public void setId(long id) {
+			this.id = id;
+		}
+
+
 
 		public void setType(String type) {
 			this.type = type;
@@ -108,5 +121,3 @@ public class MenuItem {
 	        this.restaurant = restaurant;
 	    }
 	}
-
-

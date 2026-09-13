@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.ait.app.dto.MenuItemDto;
 import com.ait.app.exception.MenuItemServiceException;
+import com.ait.app.exception.MenuServiceException;
 import com.ait.app.exception.UserServiceException;
 import com.ait.app.model.MenuItem;
 import com.ait.app.model.Restaurant;
@@ -30,58 +31,78 @@ public class MenuServiceImpl implements MenuService {
     
 
 	@Override
-	public Long addMenuItem(Long restaurantId, MenuItemDto dto) {
-		 Optional<Restaurant> optionalRestaurant =
-	                restaurantRepository.findById(restaurantId);
+	public MenuItem addMenuItem(MenuItemDto dto) {
+		 if (dto == null) {
+	            throw new MenuServiceException(HttpStatus.BAD_REQUEST,"Menu item details cannot be null");
+	        }
 
-	        if (optionalRestaurant.isEmpty()) {
-	            throw new UserServiceException(HttpStatus.NOT_FOUND,"Restaurant not found for id: " + restaurantId);
+	        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+	        		throw new MenuServiceException( HttpStatus.BAD_REQUEST,"Food name cannot be empty");
 	        }
-	        if (dto.getName() == null || dto.getName().isBlank()) {
-	            throw new UserServiceException( HttpStatus.BAD_REQUEST,"Menu item name is required");
+
+	        if (dto.getType() == null || dto.getType().trim().isEmpty()) {
+	            throw new MenuServiceException( HttpStatus.BAD_REQUEST,"Food type cannot be empty");
 	        }
-	        
-	        if (dto.getHalfPrice() <= 0 || dto.getFullPrice() <= 0) {
-	            throw new UserServiceException( HttpStatus.BAD_REQUEST,"Half price and full price must be greater than 0");
+
+	        if (dto.getDescription() == null|| dto.getDescription().trim().isEmpty()) {
+	        		throw new MenuServiceException( HttpStatus.BAD_REQUEST,"Description cannot be empty");
 	        }
-	        
-	        Optional<MenuItem> existingItem = menuItemRepository.findByRestaurantIdAndName(restaurantId,dto.getName());
+
+	        if (dto.getRestaurantId() <= 0) {
+	            throw new MenuServiceException(HttpStatus.BAD_REQUEST,"Restaurant id must be greater than 0");
+	        }
+
+	        if (dto.getHalfPrice() <= 0) {
+	            throw new MenuServiceException(HttpStatus.BAD_REQUEST,"Half price must be greater than 0");
+	        }
+
+	        if (dto.getFullPrice() <= 0) {
+	            throw new MenuServiceException(HttpStatus.BAD_REQUEST,"Full price must be greater than 0");
+	        }
+
+	        Restaurant restaurant = restaurantRepository.findById((long) dto.getRestaurantId()).orElse(null);
+
+	        if (restaurant == null) {
+	            throw new MenuServiceException(HttpStatus.NOT_FOUND,"Restaurant not found with id: "+ dto.getRestaurantId());
+	        }
+
+	        Optional<MenuItem> existingItem =
+	                menuItemRepository.findByRestaurantIdAndName(dto.getRestaurantId(),dto.getName().trim());
 
 	        if (existingItem.isPresent()) {
-	            throw new UserServiceException(HttpStatus.CONFLICT,"Menu item already exists in this restaurant");
+	            throw new MenuServiceException(HttpStatus.CONFLICT,
+	                    "Food item already exists in this restaurant"
+	            );
 	        }
-	        
-	        Restaurant restaurant = optionalRestaurant.get();
 
-	        MenuItem menuItem = new MenuItem();
+	        MenuItem item = new MenuItem();
 
-	        menuItem.setName(dto.getName());
-	        menuItem.setDescription(dto.getDescription());
-	        menuItem.setFullPrice(dto.getFullPrice());
-	        menuItem.setHalfPrice(dto.getHalfPrice());
-	        menuItem.setAvailable(dto.isAvailable());
-	        menuItem.setType(dto.getType());
-	        menuItem.setRestaurant(restaurant);
-	        
-	        MenuItem savedItem = menuItemRepository.save(menuItem);
+	        item.setName(dto.getName().trim());
+	        item.setDescription(dto.getDescription().trim());
+	        item.setType(dto.getType().trim());
+	        item.setHalfPrice(dto.getHalfPrice());
+	        item.setFullPrice(dto.getFullPrice());
+	        item.setAvailable(dto.isAvailable());
+	        item.setRestaurant(restaurant);
 
-	        return savedItem.getId();
+	      return   menuItemRepository.save(item);
+	         
+	    }
 
-	}
-	@Transactional
-	@Override
-	public String updateMenuItemById(long restaurantId, long itemId, String field, String value) {
-		String query = "UPDATE menu_items SET " + field + " = :value WHERE id = :itemId "
-				+ "AND restaurant_id = :restaurantId";
-
-		int result = entityManager.createNativeQuery(query).setParameter("value", value).setParameter("itemId", itemId)
-				.setParameter("restaurantId", restaurantId).executeUpdate();
-
-		if (result == 0) {
-			throw new MenuItemServiceException(HttpStatus.NOT_FOUND, "Menu item not exist");
-		}
-
-		return "Menu item updated successfully";
-	}
+//	@Transactional
+//	@Override
+//	public String updateMenuItemById(long restaurantId, long itemId, String field, String value) {
+//		String query = "UPDATE menu_items SET " + field + " = :value WHERE id = :itemId "
+//				+ "AND restaurant_id = :restaurantId";
+//
+//		int result = entityManager.createNativeQuery(query).setParameter("value", value).setParameter("itemId", itemId)
+//				.setParameter("restaurantId", restaurantId).executeUpdate();
+//
+//		if (result == 0) {
+//			throw new MenuItemServiceException(HttpStatus.NOT_FOUND, "Menu item not exist");
+//		}
+//
+//		return "Menu item updated successfully";
+//	}
 
 }
