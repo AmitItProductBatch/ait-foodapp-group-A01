@@ -2,18 +2,20 @@ package com.ait.app.serviceImpl;
 
 
 import java.util.Optional;
-
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import com.ait.app.dto.MenuItemDto;
+import com.ait.app.exception.MenuItemServiceException;
 import com.ait.app.exception.UserServiceException;
 import com.ait.app.model.MenuItem;
 import com.ait.app.model.Restaurant;
 import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.repository.RestaurantRepository;
 import com.ait.app.service.MenuService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 @Service
 public class MenuServiceImpl implements MenuService {
 	
@@ -22,6 +24,9 @@ public class MenuServiceImpl implements MenuService {
     
     @Autowired
     private RestaurantRepository restaurantRepository;
+    
+    @PersistenceContext 
+    EntityManager entityManager;
     
 
 	@Override
@@ -62,6 +67,21 @@ public class MenuServiceImpl implements MenuService {
 
 	        return savedItem.getId();
 
+	}
+	@Transactional
+	@Override
+	public String updateMenuItemById(long restaurantId, long itemId, String field, String value) {
+		String query = "UPDATE menu_items SET " + field + " = :value WHERE id = :itemId "
+				+ "AND restaurant_id = :restaurantId";
+
+		int result = entityManager.createNativeQuery(query).setParameter("value", value).setParameter("itemId", itemId)
+				.setParameter("restaurantId", restaurantId).executeUpdate();
+
+		if (result == 0) {
+			throw new MenuItemServiceException(HttpStatus.NOT_FOUND, "Menu item not exist");
+		}
+
+		return "Menu item updated successfully";
 	}
 
 }
