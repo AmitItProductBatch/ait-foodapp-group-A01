@@ -17,10 +17,14 @@ public class Users {
 	private int userId;
 	private String fullName;
 	private String email;
+	
 	private String password;
 	private long phoneNo;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 private List<Address> addresses;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Restaurant> restaurants;
 	
 	public Users() {
 		 
@@ -73,7 +77,13 @@ private List<Address> addresses;
 	public void setAddresses(List<Address> addresses) {
 		this.addresses = addresses;
 	}
-	
+	public List<Restaurant> getRestaurants() {
+	    return restaurants;
+	}
+
+	public void setRestaurants(List<Restaurant> restaurants) {
+	    this.restaurants = restaurants;
+	}
 
 
 }

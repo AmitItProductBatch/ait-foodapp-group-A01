@@ -16,6 +16,6 @@ public interface UserService {
 	public Users updateUserById(int id, UpdateUserDto u);
 	
 	//Story no FOO-105 //
-	public void deleteUserByID(int id, UsersDto dto);
+	public UserResponseDto deleteUserByID(int id, UsersDto dto);
 
 }
