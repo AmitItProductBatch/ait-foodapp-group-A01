@@ -14,25 +14,28 @@ import com.ait.app.dto.MenuItemDto;
 import com.ait.app.service.MenuService;
 
 @RestController
-@RequestMapping("/api/resturants")
+@RequestMapping("/api/restaurants")
 public class MenuItemController {
 
 	@Autowired
 	private MenuService menuService;
 
-	@PostMapping("/{restaurantId}")
-	public ResponseEntity AddMenuItem(@PathVariable long restaurantId, @RequestBody MenuItemDto dto) {
-		long menuItemId = menuService.addMenuItem(restaurantId, dto);
-		return new ResponseEntity<>("Item added for restaurant successfully", HttpStatus.CREATED);
+	@PostMapping("/addmenu")
+	public ResponseEntity<String> addMenuItem(@RequestBody MenuItemDto dto) {
+
+		menuService.addMenuItem(dto);
+
+		return new ResponseEntity<>("Menu item added successfully for restaurant: " + dto.getRestaurantId(),
+				HttpStatus.CREATED);
 	}
 
-	@PatchMapping("/{restaurantId}/menu/{itemId}")
-	public ResponseEntity<String> updateMenuItemById(@PathVariable long restaurantId, @PathVariable long itemId,
-			@PathVariable String field, @PathVariable String value) {
-
-		String response = menuService.updateMenuItemById(restaurantId, itemId, field, value);
-
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
+//	@PatchMapping("/{restaurantId}/menu{itemId}")
+//	public ResponseEntity<String> updateMenuItemById(@PathVariable long restaurantId, @PathVariable long itemId,
+//			@PathVariable String field, @PathVariable String value) {
+//
+//		String response = menuService.updateMenuItemById(restaurantId, itemId, field, value);
+//
+//		return new ResponseEntity<>(response, HttpStatus.OK);
+//	}
+//
 }
