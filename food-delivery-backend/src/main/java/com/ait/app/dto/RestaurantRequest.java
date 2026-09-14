@@ -2,7 +2,7 @@ package com.ait.app.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class CreateRestaurantRequest {
+public class RestaurantRequest {
 
 	@NotBlank(message = "Restaurant name is required")
 	private String name;
@@ -16,11 +16,15 @@ public class CreateRestaurantRequest {
 	private String contactDetails;
 	
 	private String  email;
+	
+	private int userId;
+	
+	
 
-	public CreateRestaurantRequest() {
+	public RestaurantRequest() {
 	}
 
-	public CreateRestaurantRequest(String name, String address, String country, String contactDetails) {
+	public RestaurantRequest(String name, String address, String country, String contactDetails) {
 		this.name = name;
 		this.address = address;
 		this.country = country;
@@ -66,5 +70,12 @@ public class CreateRestaurantRequest {
 
 	public void setContactDetails(String contactDetails) {
 		this.contactDetails = contactDetails;
+	}
+	public int getUserId() {
+	    return userId;
+	}
+
+	public void setUserId(int userId) {
+	    this.userId = userId;
 	}
 }

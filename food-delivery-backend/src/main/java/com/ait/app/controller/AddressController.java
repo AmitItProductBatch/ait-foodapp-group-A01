@@ -20,19 +20,19 @@ import com.ait.app.service.AddressService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class AddressController {
 
 	@Autowired
 	private AddressService addressService;
 
-	@PostMapping("/{userId}/addresses")
-	public ResponseEntity<AddressResponseDto> createAddress(@PathVariable int userId,
-			@Valid @RequestBody AddressDto addressDto) {
-
-		AddressResponseDto createdAddress = addressService.createAddress(userId, addressDto);
-		return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
-	}
+     @PostMapping("/{userId}/addresses")
+    public ResponseEntity<AddressResponseDto> createAddress(
+            @PathVariable int userId, 
+            @Valid @RequestBody AddressDto addressDto) {
+        AddressResponseDto createdAddress = addressService.createAddress(userId, addressDto);
+        return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
+    }
 
 	@PatchMapping("/users/{userId}/addresses/{addressId}")
 	public ResponseEntity<Address> updateAddress(@PathVariable int userId,
@@ -49,6 +49,4 @@ public class AddressController {
 		return new ResponseEntity("Address deleted successfully for id :" + addressId + " User Id :" + userId,
 				HttpStatus.OK);
 
-	}
-
-}
+	}}

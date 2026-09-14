@@ -33,6 +33,9 @@ public class UserConttroller {
 //
 	}
 
+	
+	
+	
 	@GetMapping("/getUser/{id}")
 	public ResponseEntity getUserDetails(@PathVariable int id) {
 
