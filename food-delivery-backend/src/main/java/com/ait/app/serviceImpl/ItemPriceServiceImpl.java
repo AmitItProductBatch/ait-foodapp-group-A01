@@ -16,20 +16,22 @@ public class ItemPriceServiceImpl implements ItemPriceService {
     @Autowired
     private MenuItemRepository menuItemRepository;
 
+
+
+
     @Override
     public ItemPriceResponseDto getItemPrice(Long itemId) {
-        MenuItem item = menuItemRepository.findById(itemId)
-                .orElseThrow(() -> new MenuItemServiceException(
+        MenuItem item = menuItemRepository.findById(itemId).orElseThrow(() -> new MenuItemServiceException(
                         HttpStatus.NOT_FOUND, 
-                        "Food item not found with id: " + itemId
+                        "menu item not found with id: " + itemId
                 ));
 
         return new ItemPriceResponseDto(
-                item.getId(),
+              item.getId(),
                 item.getName(),
                 item.getFullPrice(),
-                item.getHalfPrice(),
-                item.isAvailable()
+            item.getHalfPrice(),
+                 item.isAvailable()
         );
     }
 }

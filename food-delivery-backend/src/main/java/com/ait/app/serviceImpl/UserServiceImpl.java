@@ -52,20 +52,16 @@ public class UserServiceImpl implements UserService {
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Invalid email format");
 		}
 		
-		Optional<Users> optPhone = userRepository.existsByPhoneNo(0);
+Optional<Users> optEmail = userRepository.findByEmail(dto.getEmail());
 
-		if (optPhone.isPresent()) {
-			throw new UserServiceException(HttpStatus.CONFLICT, "Phone number already registered");
-		}
+if (optEmail.isPresent()) {
+    throw new UserServiceException(HttpStatus.CONFLICT, "email registered already");
+}
 
-		Optional<Users> optEmail = userRepository.findByEmail(dto.getEmail());
+if (userRepository.existsByPhoneNo(dto.getPhoneNo())) {
+    throw new UserServiceException(HttpStatus.CONFLICT, "phone number already registered");
+}
 
-		if (optEmail.isPresent()) {
-			throw new UserServiceException(HttpStatus.CONFLICT, "Email already registered");
-		}
-		if (userRepository.existsByPhoneNo(dto.getPhoneNo())) {
-			throw new UserServiceException(HttpStatus.CONFLICT, "Phone number already registered");
-		}
 		if (dto.getPassword() == null || dto.getPassword().isBlank()) {
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Password is required");
 		}
