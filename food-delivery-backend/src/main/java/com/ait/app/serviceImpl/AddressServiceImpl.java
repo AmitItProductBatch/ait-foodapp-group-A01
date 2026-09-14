@@ -1,6 +1,8 @@
 package com.ait.app.serviceImpl;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,7 @@ import com.ait.app.exception.UserServiceException;
 import com.ait.app.model.Address;
 import com.ait.app.model.Users;
 import com.ait.app.repository.AddressRepository;
-import com.ait.app.repository.UserRepository; // Assuming you have this
+import com.ait.app.repository.UserRepository;
 import com.ait.app.service.AddressService;
 
 import jakarta.persistence.EntityManager;
@@ -35,12 +37,9 @@ public class AddressServiceImpl implements AddressService {
 
 	@Override
 	public AddressResponseDto createAddress(int userId, AddressDto addressDto) {
-
-//verifying if user exists in db
 		Users user = userRepository.findById(userId)
 				.orElseThrow(() -> new UserServiceException(HttpStatus.NOT_FOUND, "User not found"));
 
-		// mapping data through dto to entitiy
 		Address address = new Address();
 		address.setLabel(addressDto.getLabel());
 		address.setStreet(addressDto.getStreet());
@@ -53,7 +52,6 @@ public class AddressServiceImpl implements AddressService {
 
 		Address savedAddress = addressRepository.save(address);
 
-		// respose mapping after saving
 		AddressResponseDto response = new AddressResponseDto();
 		response.setAddressId(savedAddress.getAddressId());
 		response.setLabel(savedAddress.getLabel());
@@ -65,9 +63,41 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
+	public List<AddressResponseDto> getAllAddresses(int userId) {
+		userRepository.findById(userId)
+				.orElseThrow(() -> new UserServiceException(HttpStatus.NOT_FOUND, "User not found"));
+
+		List<Address> addresses = addressRepository.findByUser_UserId(userId);
+
+		return addresses.stream().map(address -> {
+			AddressResponseDto response = new AddressResponseDto();
+			response.setAddressId(address.getAddressId());
+			response.setLabel(address.getLabel());
+			response.setStreet(address.getStreet());
+			response.setCity(address.getCity());
+			response.setPostalCode(address.getPostalCode());
+			return response;
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public AddressResponseDto getAddress(int userId, int addressId) {
+		Address address = addressRepository.findByAddressIdAndUser_UserId(addressId, userId)
+				.orElseThrow(() -> new UserServiceException(HttpStatus.NOT_FOUND, "Address not found"));
+
+		AddressResponseDto response = new AddressResponseDto();
+		response.setAddressId(address.getAddressId());
+		response.setLabel(address.getLabel());
+		response.setStreet(address.getStreet());
+		response.setCity(address.getCity());
+		response.setPostalCode(address.getPostalCode());
+
+		return response;
+	}
+
+	@Override
 	@Transactional
 	public Address updateAddress(int addressid, int userId, AddressDto dto) {
-
 		Optional<Address> optional = addressRepository.findByAddressIdAndUserUserId(addressid, userId);
 
 		if (optional.isEmpty()) {
@@ -163,7 +193,6 @@ public class AddressServiceImpl implements AddressService {
 
 	@Override
 	public void deleteAddressByA_IdAndU_Id(int addressId, int userId) {
-
 		Optional<Users> optionalUser = userRepository.findById(userId);
 
 		if (optionalUser.isEmpty()) {
@@ -179,5 +208,4 @@ public class AddressServiceImpl implements AddressService {
 
 		addressRepository.delete(optionalAddress.get());
 	}
-
 }

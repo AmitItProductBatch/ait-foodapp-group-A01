@@ -1,15 +1,19 @@
 package com.ait.app.service;
 
+import java.util.List;
+
 import com.ait.app.dto.AddressDto;
 import com.ait.app.dto.AddressResponseDto;
 import com.ait.app.model.Address;
 
 public interface AddressService {
-	AddressResponseDto createAddress(int userId, AddressDto addressDto);
+    AddressResponseDto createAddress(int userId, AddressDto addressDto);
 
+    List<AddressResponseDto> getAllAddresses(int userId);
 
-	public Address updateAddress(int addressid, int userId, AddressDto dto);
+    AddressResponseDto getAddress(int userId, int addressId);
 
-	public void deleteAddressByA_IdAndU_Id(int addressId, int userId);
+    public Address updateAddress(int addressid, int userId, AddressDto dto);
 
+    public void deleteAddressByA_IdAndU_Id(int addressId, int userId);
 }
