@@ -51,6 +51,12 @@ public class UserServiceImpl implements UserService {
 		if (!dto.getEmail().matches(emailRegex)) {
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Invalid email format");
 		}
+		
+		Optional<Users> optPhone = userRepository.existsByPhoneNo(0);
+
+		if (optPhone.isPresent()) {
+			throw new UserServiceException(HttpStatus.CONFLICT, "Phone number already registered");
+		}
 
 		Optional<Users> optEmail = userRepository.findByEmail(dto.getEmail());
 
