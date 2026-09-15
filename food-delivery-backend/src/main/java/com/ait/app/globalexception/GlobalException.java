@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.ait.app.exception.AddressServiceException;
-
+import com.ait.app.exception.CategoryServiceException;
 import com.ait.app.exception.MenuItemServiceException;
 import com.ait.app.exception.RestaurantServiceException;
 import com.ait.app.exception.UserServiceException;
@@ -34,6 +34,12 @@ public class GlobalException {
 	@ExceptionHandler(value = AddressServiceException.class)
 	public ResponseEntity UserExceptionHandler(AddressServiceException ae) {
 		return new ResponseEntity(ae.getMessage(), ae.getHttpStatus());
+
+	}
+	
+	@ExceptionHandler(value = CategoryServiceException.class)
+	public ResponseEntity UserExceptionHandler(CategoryServiceException ce) {
+		return new ResponseEntity(ce.getMessage(), ce.getHttpStatus());
 
 	}
 	

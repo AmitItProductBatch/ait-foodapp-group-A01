@@ -48,6 +48,9 @@ public class Restaurant {
 	@JoinColumn(name = "user_id", nullable = false)
 	private Users user;
 	
+	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+	private List<Category> categories;
+
 
 	public Restaurant() {
 	}
@@ -142,4 +145,14 @@ public class Restaurant {
 	public void setUser(Users user) {
 	    this.user = user;
 	}
+
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+	
+	
 }
