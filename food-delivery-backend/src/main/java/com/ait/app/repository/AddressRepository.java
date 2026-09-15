@@ -10,7 +10,9 @@ import com.ait.app.model.Address;
 
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Integer> {
-	List<Address> findByUser_UserId(int userId);
+    List<Address> findByUser_UserId(int userId);
 
-	Optional<Address> findByAddressIdAndUserUserId(int addressId, int userId);
+    Optional<Address> findByAddressIdAndUser_UserId(int addressId, int userId);
+
+    Optional<Address> findByAddressIdAndUserUserId(int addressId, int userId);
 }
