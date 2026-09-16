@@ -3,9 +3,9 @@ package com.ait.app.exception;
 import org.springframework.http.HttpStatus;
 
 public class CategoryServiceException extends RuntimeException {
-	private String message;
 
-	private HttpStatus httpStatus;
+	String message;
+	HttpStatus httpStatus;
 
 	public CategoryServiceException(String message, HttpStatus httpStatus) {
 		super();
@@ -17,16 +17,19 @@ public class CategoryServiceException extends RuntimeException {
 		return message;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 	public HttpStatus getHttpStatus() {
 		return httpStatus;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	public void setHttpStatus(HttpStatus httpStatus) {
 		this.httpStatus = httpStatus;
 	}
+
+	
+	
 
 }

@@ -1,19 +1,28 @@
 package com.ait.app.dto;
 
-import com.ait.app.model.Restaurant;
+import com.ait.app.enums.FoodType;
 
 public class MenuItemDto {
 
     private String name;
     private String description;
-    private String type;
+    private FoodType type;
     private long restaurantId;
     private double halfPrice;
     private double fullPrice;
     private boolean available;
-   
+    private int categoryId;
+    
 
-    public String getName() {
+    public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getName() {
         return name;
     }
 
@@ -29,11 +38,11 @@ public class MenuItemDto {
         this.description = description;
     }
 
-    public String getType() {
+    public FoodType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(FoodType type) {
         this.type = type;
     }
 

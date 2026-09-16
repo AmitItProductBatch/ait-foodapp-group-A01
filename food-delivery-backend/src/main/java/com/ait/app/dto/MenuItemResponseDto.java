@@ -1,9 +1,11 @@
 package com.ait.app.dto;
 
+import com.ait.app.enums.FoodType;
+
 public class MenuItemResponseDto {
 	private String name;
 	private String description;
-	private String type;
+	private FoodType type;
 	private double halfPrice;
 	private double fullPrice;
 	private boolean available;
@@ -24,11 +26,11 @@ public class MenuItemResponseDto {
 		this.description = description;
 	}
 
-	public String getType() {
+	public FoodType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(FoodType type) {
 		this.type = type;
 	}
 

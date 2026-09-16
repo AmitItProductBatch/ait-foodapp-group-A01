@@ -3,20 +3,25 @@ package com.ait.app.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ait.app.dto.MenuItemDto;
 import com.ait.app.dto.MenuItemResponseDto;
+import com.ait.app.exception.CategoryServiceException;
 import com.ait.app.exception.MenuItemServiceException;
 import com.ait.app.exception.MenuServiceException;
-import com.ait.app.exception.UserServiceException;
+import com.ait.app.model.Category;
 import com.ait.app.model.MenuItem;
 import com.ait.app.model.Restaurant;
+import com.ait.app.repository.CategoryRepository;
 import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.repository.RestaurantRepository;
 import com.ait.app.service.MenuService;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -28,6 +33,10 @@ public class MenuServiceImpl implements MenuService {
 
 	@Autowired
 	private RestaurantRepository restaurantRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
 
 	@PersistenceContext
 	EntityManager entityManager;
@@ -42,8 +51,8 @@ public class MenuServiceImpl implements MenuService {
 			throw new MenuServiceException(HttpStatus.BAD_REQUEST, "Food name cannot be empty");
 		}
 
-		if (dto.getType() == null || dto.getType().trim().isEmpty()) {
-			throw new MenuServiceException(HttpStatus.BAD_REQUEST, "Food type cannot be empty");
+		if (dto.getType() == null) {
+			throw new MenuServiceException(HttpStatus.BAD_REQUEST, "Food type cannot be null or empty");
 		}
 
 		if (dto.getDescription() == null || dto.getDescription().trim().isEmpty()) {
@@ -76,15 +85,28 @@ public class MenuServiceImpl implements MenuService {
 			throw new MenuServiceException(HttpStatus.CONFLICT, "Food item already exists in this restaurant");
 		}
 
+//		----------
+		
+//		Category category = categoryRepository.findById((long) dto.getRestaurantId()).orElse(null);
+		Category category = categoryRepository.findById(dto.getCategoryId()).orElse(null);
+		
+		Optional<Category> existingCategory = categoryRepository.findByRestaurant_IdAndFoodName(dto.getCategoryId(),
+				dto.getName().trim());
+
+		if (existingCategory.isPresent()) {
+			throw new CategoryServiceException("Food item already exists in this restaurant", HttpStatus.CONFLICT);
+		}
+
 		MenuItem item = new MenuItem();
 
 		item.setName(dto.getName().trim());
 		item.setDescription(dto.getDescription().trim());
-		item.setType(dto.getType().trim());
+		item.setType(dto.getType());
 		item.setHalfPrice(dto.getHalfPrice());
 		item.setFullPrice(dto.getFullPrice());
 		item.setAvailable(dto.isAvailable());
 		item.setRestaurant(restaurant);
+		item.setCategory(category);
 
 		return menuItemRepository.save(item);
 

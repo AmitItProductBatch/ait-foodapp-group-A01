@@ -6,11 +6,10 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.ait.app.enums.FoodType;
+import com.ait.app.enums.FoodCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,10 +28,10 @@ public class Category {
 	private int id;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private FoodType type;
+//	@Column(nullable = false)
+	private FoodCategory category;
 
-	private String categoryName;
+	private String foodName;
 
 	@CreationTimestamp
 	private LocalDateTime createdAt;
@@ -45,7 +44,7 @@ public class Category {
 
 	@ManyToOne
 	@JsonIgnore
-	@JoinColumn(name = "restaurnt_id", referencedColumnName = "id")
+	@JoinColumn(name = "restaurant_id", referencedColumnName = "id")
 	private Restaurant restaurant;
 
 	public int getId() {
@@ -56,20 +55,20 @@ public class Category {
 		this.id = id;
 	}
 
-	public FoodType getType() {
-		return type;
+	public FoodCategory getCategory() {
+		return category;
 	}
 
-	public void setType(FoodType type) {
-		this.type = type;
+	public void setCategory(FoodCategory category) {
+		this.category = category;
 	}
 
-	public String getCategoryName() {
-		return categoryName;
+	public String getFoodName() {
+		return foodName;
 	}
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+	public void setFoodName(String foodName) {
+		this.foodName = foodName;
 	}
 
 	public LocalDateTime getCreatedAt() {
