@@ -3,9 +3,13 @@ package com.ait.app.model;
 
 import java.util.List;
 
+import com.ait.app.enums.FoodType;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,17 +44,19 @@ public class Restaurant {
 	@Column(nullable = false)
 	private String status;
 
-	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private FoodType type;
+
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
 	private List<MenuItem> menuItems;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private Users user;
-	
+
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
 	private List<Category> categories;
-
 
 	public Restaurant() {
 	}
@@ -138,12 +144,13 @@ public class Restaurant {
 	public void setMenuItems(List<MenuItem> menuItems) {
 		this.menuItems = menuItems;
 	}
+
 	public Users getUser() {
-	    return user;
+		return user;
 	}
 
 	public void setUser(Users user) {
-	    this.user = user;
+		this.user = user;
 	}
 
 	public List<Category> getCategories() {
@@ -153,6 +160,12 @@ public class Restaurant {
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
-	
-	
+	public FoodType getType() {
+	    return type;
+	}
+
+	public void setType(FoodType type) {
+	    this.type = type;
+	}
+
 }

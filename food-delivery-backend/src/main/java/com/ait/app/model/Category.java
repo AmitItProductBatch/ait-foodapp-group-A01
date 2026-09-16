@@ -45,7 +45,7 @@ public class Category {
 
 	@ManyToOne
 	@JsonIgnore
-	@JoinColumn(name = "restaurnt_id", referencedColumnName = "id")
+	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
 
 	public int getId() {

@@ -56,6 +56,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 		restaurant.setContactDetails(request.getContactDetails());
 		restaurant.setStatus("PENDING");
 		restaurant.setUser(user);
+		restaurant.setType(request.getType());
 
 		Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 

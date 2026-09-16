@@ -1,5 +1,7 @@
 package com.ait.app.dto;
 
+import com.ait.app.enums.FoodType;
+
 import jakarta.validation.constraints.NotBlank;
 
 public class RestaurantRequest {
@@ -18,6 +20,8 @@ public class RestaurantRequest {
 	private String  email;
 	
 	private int userId;
+	
+	private FoodType type;
 	
 	
 
@@ -78,4 +82,13 @@ public class RestaurantRequest {
 	public void setUserId(int userId) {
 	    this.userId = userId;
 	}
+
+	public FoodType getType() {
+		return type;
+	}
+
+	public void setType(FoodType type) {
+		this.type = type;
+	}
+	
 }

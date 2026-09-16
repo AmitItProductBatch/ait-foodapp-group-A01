@@ -12,6 +12,7 @@ import com.ait.app.exception.RestaurantServiceException;
 import com.ait.app.model.Category;
 import com.ait.app.model.Restaurant;
 import com.ait.app.repository.CategoryRepository;
+import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.repository.RestaurantRepository;
 import com.ait.app.service.CategoryService;
 
@@ -23,6 +24,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	RestaurantRepository restaurantRepository;
+
+	@Autowired
+	MenuItemRepository itemRepository;
 
 	@Override
 	public void createCategory(int rid, CategoryDto dto) {
@@ -62,6 +66,22 @@ public class CategoryServiceImpl implements CategoryService {
 		dto.setType(category.getType());
 
 		return dto;
+	}
+
+	@Override
+	public void deleteCategory(int categoryId) {
+
+		Optional<Category> optional = categoryRepository.findById(categoryId);
+
+		if (optional.isEmpty()) {
+			throw new CategoryServiceException("Category is not found for id : " + categoryId, HttpStatus.NOT_FOUND);
+		}
+
+		if (itemRepository.existsByCategoryId(categoryId)) {
+			throw new CategoryServiceException("Category is being used by MenuItem", HttpStatus.CONFLICT);
+		}
+
+		categoryRepository.deleteById(categoryId);
 	}
 
 }
