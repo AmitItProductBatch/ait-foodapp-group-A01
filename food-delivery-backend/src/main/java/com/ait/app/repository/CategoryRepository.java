@@ -10,6 +10,8 @@ import com.ait.app.model.Category;
 @EnableJpaRepositories
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-	 Optional<Category> findByIdAndRestaurant_Id(int id, int restaurantId);
+	Optional<Category> findByIdAndRestaurant_Id(int id, int restaurantId);
+
+	Optional<Category> findByRestaurant_IdAndFoodName(int restaurantId, String foodName);
 
 }

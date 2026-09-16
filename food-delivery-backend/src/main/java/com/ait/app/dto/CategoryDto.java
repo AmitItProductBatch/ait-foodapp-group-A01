@@ -5,22 +5,28 @@ import com.ait.app.enums.FoodCategory;
 public class CategoryDto {
 
 	private FoodCategory category;
-	
+
 	private String foodName;
-	
+
 	private int restaurantId;
-	
-	
+
+	private int categoryId;
+
+	public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
 
 	public int getRestaurantId() {
-	    return restaurantId;
+		return restaurantId;
 	}
 
 	public void setRestaurantId(int restaurantId) {
-	    this.restaurantId = restaurantId;
+		this.restaurantId = restaurantId;
 	}
-
-	
 
 	public FoodCategory getCategory() {
 		return category;
@@ -37,5 +43,5 @@ public class CategoryDto {
 	public void setFoodName(String foodName) {
 		this.foodName = foodName;
 	}
-	
+
 }

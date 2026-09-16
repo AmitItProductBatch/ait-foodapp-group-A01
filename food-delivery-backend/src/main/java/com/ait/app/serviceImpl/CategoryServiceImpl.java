@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ait.app.dto.CategoryDto;
+import com.ait.app.exception.CategoryServiceException;
 import com.ait.app.exception.RestaurantServiceException;
 import com.ait.app.model.Category;
 import com.ait.app.model.Restaurant;
@@ -20,96 +21,110 @@ import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
 @Service
-public class CategoryServiceImpl  implements CategoryService{
-	
+public class CategoryServiceImpl implements CategoryService {
+
 	@Autowired
 	CategoryRepository categoryRepository;
-	
+
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	RestaurantRepository restaurantRepository;
 
 	@Override
 	public void createCategory(int rid, CategoryDto dto) {
 		Optional<Restaurant> optional = restaurantRepository.findById((long) rid);
-		
-		if(optional.isEmpty()) {
-			throw new RestaurantServiceException( HttpStatus.NOT_FOUND,"Restaurent is not found for id :"+rid);
+
+		if (optional.isEmpty()) {
+			throw new RestaurantServiceException(HttpStatus.NOT_FOUND, "Restaurent is not found for id :" + rid);
 		}
-		
-		Restaurant restaurant =optional.get();
-		
+
+		Restaurant restaurant = optional.get();
+
 		Category category = new Category();
-		
+
 		category.setFoodName(dto.getFoodName());
 		category.setCategory(dto.getCategory());
-		
+
 		category.setRestaurant(restaurant);
-		
+
 		categoryRepository.save(category);
-		
+
 	}
-	 
+
+	@Override
+	public CategoryDto getCategoryById(int categoryId) {
+		Optional<Category> optional = categoryRepository.findById(categoryId);
+
+		if (optional.isEmpty()) {
+			throw new CategoryServiceException("Category is not found for id : " + categoryId, HttpStatus.NOT_FOUND);
+		}
+
+		Category category = optional.get();
+
+		CategoryDto dto = new CategoryDto();
+
+		dto.setCategoryId(category.getId());
+		dto.setFoodName(category.getFoodName());
+		dto.setCategory(category.getCategory());
+
+		return dto;
+	}
+
 	@Override
 	@Transactional
 	public Category updateCategory(int cId, int rId, CategoryDto dto) {
 
-	    Optional<Category> optional = categoryRepository.findByIdAndRestaurant_Id(cId, rId);
+		Optional<Category> optional = categoryRepository.findByIdAndRestaurant_Id(cId, rId);
 
-	    if (optional.isEmpty()) {
-	        throw new RestaurantServiceException(
-	                HttpStatus.NOT_FOUND,
-	                "Category not found for id " + cId +
-	                " for restaurant id " + rId);
-	    }
+		if (optional.isEmpty()) {
+			throw new RestaurantServiceException(HttpStatus.NOT_FOUND,
+					"Category not found for id " + cId + " for restaurant id " + rId);
+		}
 
-	    StringBuilder sql = new StringBuilder("UPDATE category SET ");
-	    boolean hasUpdate = false;
+		StringBuilder sql = new StringBuilder("UPDATE category SET ");
 
-	    if (dto.getCategory() != null) {
-	        sql.append("type = :type, ");
-	        hasUpdate = true;
-	    }
+		boolean hasUpdate = false;
 
-	    if (dto.getFoodName() != null &&
-	            !dto.getFoodName().isBlank()) {
+		if (dto.getCategory() != null) {
+			sql.append("category = :category, ");
+			hasUpdate = true;
+		}
 
-	        sql.append("category_name = :categoryName, ");
-	        hasUpdate = true;
-	    }
+		if (dto.getFoodName() != null && !dto.getFoodName().isBlank()) {
 
-	    if (!hasUpdate) {
-	        return optional.get();
-	    }
+			sql.append("food_name = :foodName, ");
+			hasUpdate = true;
+		}
 
-	    sql.setLength(sql.length() - 2);
+		if (!hasUpdate) {
+			return optional.get();
+		}
 
-	    sql.append(" WHERE id = :categoryId AND restaurnt_id = :restaurantId");
+		sql.setLength(sql.length() - 2);
 
-	    Query query = entityManager.createNativeQuery(sql.toString());
+		sql.append(" WHERE id = :categoryId " + "AND restaurant_id = :restaurantId");
 
-	    query.setParameter("categoryId", cId);
-	    query.setParameter("restaurantId", rId);
+		Query query = entityManager.createNativeQuery(sql.toString());
 
-	    if (dto.getCategory() != null) {
-	        query.setParameter("type", dto.getCategory().name());
-	    }
+		query.setParameter("categoryId", cId);
+		query.setParameter("restaurantId", rId);
 
-	    if (dto.getFoodName() != null &&
-	            !dto.getFoodName().isBlank()) {
+		if (dto.getCategory() != null) {
+			query.setParameter("category", dto.getCategory().name());
+		}
 
-	        query.setParameter("categoryName", dto.getFoodName());
-	    }
+		if (dto.getFoodName() != null && !dto.getFoodName().isBlank()) {
 
-	    query.executeUpdate();
+			query.setParameter("foodName", dto.getFoodName());
+		}
 
-	    entityManager.clear();
+		query.executeUpdate();
 
-	    return entityManager.find(Category.class, cId);
+		entityManager.clear();
+
+		return entityManager.find(Category.class, cId);
 	}
-	
-
 
 }

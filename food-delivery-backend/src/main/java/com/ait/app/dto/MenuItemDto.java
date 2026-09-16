@@ -11,9 +11,18 @@ public class MenuItemDto {
     private double halfPrice;
     private double fullPrice;
     private boolean available;
-   
+    private int categoryId;
+    
 
-    public String getName() {
+    public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getName() {
         return name;
     }
 
