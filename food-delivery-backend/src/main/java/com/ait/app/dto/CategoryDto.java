@@ -7,6 +7,8 @@ public class CategoryDto {
 	private FoodType type;
 
 	private String categoryName;
+	
+	private int categoryId;
 
 	public FoodType getType() {
 		return type;
@@ -14,6 +16,14 @@ public class CategoryDto {
 
 	public void setType(FoodType type) {
 		this.type = type;
+	}
+
+	public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
 	}
 
 	public String getCategoryName() {
