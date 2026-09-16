@@ -10,5 +10,8 @@ public interface CategoryService {
 	CategoryDto getCategoryById(int categoryId);
 
 	public Category updateCategory(int cId, int rId, CategoryDto dto); 
+	
+	void deleteCategory(int categoryId);
+
 
 }

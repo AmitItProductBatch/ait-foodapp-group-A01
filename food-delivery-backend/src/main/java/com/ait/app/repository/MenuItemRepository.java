@@ -8,8 +8,8 @@ import com.ait.app.model.MenuItem;
 
 public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
-    Optional<MenuItem> findByRestaurantIdAndName(
-            Long restaurantId,
-            String name
-    );
+	Optional<MenuItem> findByRestaurantIdAndName(Long restaurantId, String name);
+	
+	boolean existsByCategoryId(int categoryId);
+	
 }
