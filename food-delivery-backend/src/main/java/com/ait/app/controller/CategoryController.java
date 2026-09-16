@@ -5,11 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ait.app.dto.CategoryDto;
+import com.ait.app.model.Category;
 import com.ait.app.service.CategoryService;
 
 @RestController
@@ -26,6 +28,18 @@ public class CategoryController {
 
 		return new ResponseEntity("Category created for restaurant id :" + rid, HttpStatus.CREATED);
 
+	}
+
+ 
+	@PutMapping("/restaurant/{rId}/category/{cId}")
+	public ResponseEntity<Category> updateCategory(
+	        @PathVariable int rId,
+	        @PathVariable int cId,
+	        @RequestBody CategoryDto dto) {
+
+		Category category = categoryService.updateCategory(cId, rId, dto);
+
+		    return new ResponseEntity(category, HttpStatus.OK);
 	}
 
 }

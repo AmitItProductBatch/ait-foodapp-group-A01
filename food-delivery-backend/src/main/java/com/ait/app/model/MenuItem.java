@@ -1,9 +1,12 @@
 package com.ait.app.model;
 
+import com.ait.app.enums.FoodType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,9 +27,12 @@ public class MenuItem {
 	@Column(nullable = false)
 	private String description;
 
-	@Column(nullable = false)
-	private String type;
+//	@Column(nullable = false)
+//	private String type;
 
+	@Enumerated(EnumType.STRING)
+	private FoodType type;
+	
 	@Column(nullable = false)
 	private double halfPrice;
 
@@ -84,9 +90,7 @@ public class MenuItem {
 		return available;
 	}
 
-	public String getType() {
-		return type;
-	}
+	
 
 	public long getId() {
 		return id;
@@ -96,7 +100,13 @@ public class MenuItem {
 		this.id = id;
 	}
 
-	public void setType(String type) {
+	
+
+	public FoodType getType() {
+		return type;
+	}
+
+	public void setType(FoodType type) {
 		this.type = type;
 	}
 

@@ -1,27 +1,41 @@
 package com.ait.app.dto;
 
-import com.ait.app.enums.FoodType;
+import com.ait.app.enums.FoodCategory;
 
 public class CategoryDto {
 
-	private FoodType type;
+	private FoodCategory category;
+	
+	private String foodName;
+	
+	private int restaurantId;
+	
+	
 
-	private String categoryName;
-
-	public FoodType getType() {
-		return type;
+	public int getRestaurantId() {
+	    return restaurantId;
 	}
 
-	public void setType(FoodType type) {
-		this.type = type;
+	public void setRestaurantId(int restaurantId) {
+	    this.restaurantId = restaurantId;
 	}
 
-	public String getCategoryName() {
-		return categoryName;
+	
+
+	public FoodCategory getCategory() {
+		return category;
 	}
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+	public void setCategory(FoodCategory category) {
+		this.category = category;
 	}
 
+	public String getFoodName() {
+		return foodName;
+	}
+
+	public void setFoodName(String foodName) {
+		this.foodName = foodName;
+	}
+	
 }

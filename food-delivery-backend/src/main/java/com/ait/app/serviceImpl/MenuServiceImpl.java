@@ -42,8 +42,8 @@ public class MenuServiceImpl implements MenuService {
 			throw new MenuServiceException(HttpStatus.BAD_REQUEST, "Food name cannot be empty");
 		}
 
-		if (dto.getType() == null || dto.getType().trim().isEmpty()) {
-			throw new MenuServiceException(HttpStatus.BAD_REQUEST, "Food type cannot be empty");
+		if (dto.getType() == null) {
+			throw new MenuServiceException(HttpStatus.BAD_REQUEST, "Food type cannot be null or empty");
 		}
 
 		if (dto.getDescription() == null || dto.getDescription().trim().isEmpty()) {
@@ -80,7 +80,7 @@ public class MenuServiceImpl implements MenuService {
 
 		item.setName(dto.getName().trim());
 		item.setDescription(dto.getDescription().trim());
-		item.setType(dto.getType().trim());
+		item.setType(dto.getType());
 		item.setHalfPrice(dto.getHalfPrice());
 		item.setFullPrice(dto.getFullPrice());
 		item.setAvailable(dto.isAvailable());
