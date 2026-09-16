@@ -3,6 +3,7 @@ package com.ait.app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +46,14 @@ public class CategoryController {
 
 		Category category = categoryService.updateCategory(cId, rId, dto);
 
-		return new ResponseEntity("category updated successfull for category Id :"+category.getId(),HttpStatus.OK);
-				}
+		return new ResponseEntity("category updated successfull for category Id :" + category.getId(), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{categoryId}")
+	public ResponseEntity<Void> deleteCategory(@PathVariable int categoryId) {
+
+		categoryService.deleteCategory(categoryId);
+
+		return ResponseEntity.noContent().build();
+	}
 }
