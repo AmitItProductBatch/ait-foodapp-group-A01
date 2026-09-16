@@ -8,6 +8,7 @@ import com.ait.app.dto.RestaurantResponse;
 public interface RestaurantService {
 	RestaurantResponse createRestaurant(RestaurantRequest request);
 	
+	
 	 RestaurantResponse getRestaurant(Long id);  
 	 
 	 List<RestaurantResponse> getAllRestaurant();

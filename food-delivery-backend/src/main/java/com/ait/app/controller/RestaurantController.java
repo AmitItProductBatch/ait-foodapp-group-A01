@@ -18,7 +18,7 @@ public class RestaurantController {
 	@Autowired
 	private RestaurantService restaurantService;
 
-	@PostMapping
+	@PostMapping 
 	public ResponseEntity<RestaurantResponse> createRestaurant(@Valid @RequestBody RestaurantRequest request) {
 		restaurantService.createRestaurant(request);
 		return new ResponseEntity("Restuarant Details Save Successfully!", HttpStatus.CREATED);
