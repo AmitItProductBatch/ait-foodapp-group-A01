@@ -7,11 +7,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.ait.app.enums.FoodCategory;
-import com.ait.app.enums.FoodType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -46,7 +44,7 @@ public class Category {
 
 	@ManyToOne
 	@JsonIgnore
-	@JoinColumn(name = "restaurnt_id", referencedColumnName = "id")
+	@JoinColumn(name = "restaurant_id", referencedColumnName = "id")
 	private Restaurant restaurant;
 
 	public int getId() {
