@@ -1,5 +1,8 @@
 package com.ait.app.serviceImpl;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,6 +149,25 @@ public class CategoryServiceImpl implements CategoryService {
 
 		categoryRepository.deleteById(categoryId);
 
+	}
+
+	@Override
+	public List<CategoryDto> getAllCategory() {
+		List<Category> c = categoryRepository.findAll();
+		if (c.isEmpty()) {
+			throw new CategoryServiceException("Please Provide approprate Message", HttpStatus.NOT_FOUND);
+		}
+		List<CategoryDto> dto = new ArrayList<>();
+		for (Category category : c) {
+			CategoryDto categoryDto = new CategoryDto();
+			categoryDto.setCategoryId(category.getId());
+			categoryDto.setFoodName(category.getFoodName());
+			categoryDto.setCategory(category.getCategory());
+            categoryDto.setRestaurantId(category.getId());
+			dto.add(categoryDto);
+		}
+
+		return dto;
 	}
 
 }
