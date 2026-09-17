@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ait.app.dto.CategoryDto;
+import com.ait.app.dto.RestaurantResponse;
 import com.ait.app.model.Category;
 import com.ait.app.service.CategoryService;
 
@@ -59,9 +60,18 @@ public class CategoryController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@GetMapping("getallCategory")
+	@GetMapping("/getAllCategory")
 	public ResponseEntity<List<CategoryDto>> getAllCategory() {
 		List<CategoryDto> cd = categoryService.getAllCategory();
 		return new ResponseEntity<>(cd, HttpStatus.OK);
 	}
+
+	@GetMapping("/categories/restaurants/{categoryId}")
+	public ResponseEntity<List<RestaurantResponse>> viewRestaurantsByCategory(@PathVariable int categoryId) {
+
+		List<RestaurantResponse> list = categoryService.viewRestaurentsByCategory(categoryId);
+
+		return new ResponseEntity(list, HttpStatus.OK);
+	}
+
 }
