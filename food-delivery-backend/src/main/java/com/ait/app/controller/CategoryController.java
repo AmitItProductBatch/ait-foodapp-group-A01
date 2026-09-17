@@ -1,5 +1,7 @@
 package com.ait.app.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,5 +57,11 @@ public class CategoryController {
 		categoryService.deleteCategory(categoryId);
 
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("getallCategory")
+	public ResponseEntity<List<CategoryDto>> getAllCategory() {
+		List<CategoryDto> cd = categoryService.getAllCategory();
+		return new ResponseEntity<>(cd, HttpStatus.OK);
 	}
 }
