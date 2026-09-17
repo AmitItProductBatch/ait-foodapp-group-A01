@@ -1,5 +1,6 @@
 package com.ait.app.serviceImpl;
 
+import com.ait.app.model.MenuItem;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ait.app.dto.CategoryDto;
+import com.ait.app.dto.RestaurantResponse;
 import com.ait.app.exception.CategoryServiceException;
 import com.ait.app.exception.RestaurantServiceException;
 import com.ait.app.model.Category;
@@ -163,11 +165,44 @@ public class CategoryServiceImpl implements CategoryService {
 			categoryDto.setCategoryId(category.getId());
 			categoryDto.setFoodName(category.getFoodName());
 			categoryDto.setCategory(category.getCategory());
-            categoryDto.setRestaurantId(category.getId());
+			categoryDto.setRestaurantId(category.getId());
 			dto.add(categoryDto);
 		}
 
 		return dto;
+	}
+
+	@Override
+	public List<RestaurantResponse> viewRestaurentsByCategory(int categoryId) {
+
+		Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+
+		if (optionalCategory.isEmpty()) {
+			throw new CategoryServiceException("Please Provide a Valid Id", HttpStatus.NOT_FOUND);
+		}
+
+		Category category = optionalCategory.get();
+
+		List<RestaurantResponse> list = new ArrayList();
+
+		for (MenuItem menuItem : category.getMenuItem()) {
+
+			Restaurant restaurant = menuItem.getRestaurant();
+
+			RestaurantResponse response = new RestaurantResponse();
+
+			response.setId(restaurant.getId());
+			response.setName(restaurant.getName());
+			response.setAddress(restaurant.getAddress());
+			response.setCountry(restaurant.getCountry());
+			response.setContactDetails(restaurant.getContactDetails());
+			response.setEmail(restaurant.getEmail());
+			response.setStatus(restaurant.getStatus());
+
+			list.add(response);
+		}
+
+		return list;
 	}
 
 }
