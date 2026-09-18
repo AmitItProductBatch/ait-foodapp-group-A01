@@ -1,5 +1,7 @@
 package com.ait.app.model;
 
+import java.util.List;
+
 import com.ait.app.enums.FoodType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -12,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -50,6 +53,10 @@ public class MenuItem {
 	@JsonIgnore
 	@JoinColumn(name = "category_id", referencedColumnName = "id")
 	private Category category;
+	
+	@OneToMany(mappedBy = "menuItem")
+    private List<CartItem> cartItems;
+
 
 	public MenuItem() {
 	}
@@ -129,6 +136,16 @@ public class MenuItem {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
+
+	public List<CartItem> getCartItems() {
+		return cartItems;
+	}
+
+	public void setCartItems(List<CartItem> cartItems) {
+		this.cartItems = cartItems;
+	}
+	
+	
 	
 	
 }

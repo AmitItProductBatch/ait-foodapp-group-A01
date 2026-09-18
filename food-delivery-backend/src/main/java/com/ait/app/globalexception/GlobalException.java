@@ -1,10 +1,12 @@
 package com.ait.app.globalexception;
 
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.ait.app.exception.AddressServiceException;
+import com.ait.app.exception.CartItemServiceException;
 import com.ait.app.exception.CartServiceException;
 import com.ait.app.exception.CategoryServiceException;
 import com.ait.app.exception.MenuItemServiceException;
@@ -49,6 +51,12 @@ public class GlobalException {
 		return new ResponseEntity(ce.getMessage(), ce.getHttpStatus());
 
 	}
+	@ExceptionHandler(CartItemServiceException.class )
+	public ResponseEntity CartItemServiceExceptionHandler(CartItemServiceException ct) {
+		return new ResponseEntity(ct.getMessage(), ct.getHttpStatus());
+		
+	}
+
 	
 	
 	@ExceptionHandler(value = Exception.class)

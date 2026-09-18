@@ -1,16 +1,19 @@
 package com.ait.app.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.apache.catalina.User;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -33,6 +36,9 @@ public class Cart {
 	@OneToOne
 	@JoinColumn(name = "user_id", nullable = false, unique = true)
     private Users user;
+	
+	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems;
 	
 	
 	
@@ -67,7 +73,13 @@ public class Cart {
 		this.user = user;
 	}
 	
-	
+	public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
 	
 			
 }
