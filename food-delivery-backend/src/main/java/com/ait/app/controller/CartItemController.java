@@ -22,7 +22,6 @@ public class CartItemController {
 
 	@Autowired
 	CartItemService cartItemService;
-
 	
 	@PostMapping("/{cartId}/items")
 	public ResponseEntity<CartItemResponse> addItemToCart(@PathVariable int cartId,
@@ -32,7 +31,6 @@ public class CartItemController {
 
 		return new ResponseEntity("Cart Item Created ", HttpStatus.CREATED);
 	}
-
 	
 	@GetMapping("/{cartId}/items")
 	public ResponseEntity<List<CartItemResponse>> getAllCartItemsByCartId(@PathVariable int cartId) {
