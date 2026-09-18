@@ -2,6 +2,7 @@ package com.ait.app.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,9 @@ import com.ait.app.repository.CartRepository;
 import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.service.CartItemService;
 
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
 @Service
 public class CartItemServiceImpl implements CartItemService {
 
@@ -29,6 +33,9 @@ public class CartItemServiceImpl implements CartItemService {
 
 	@Autowired
 	MenuItemRepository itemRepository;
+
+	@Autowired
+	EntityManager entityManager;
 
 	@Override
 	public CartItemResponse addItemToCart(int cartId, CartItemRequest request) {
@@ -81,10 +88,31 @@ public class CartItemServiceImpl implements CartItemService {
 			response.setQuantity(cartItem.getQuantity());
 			response.setMenuItemId(cartItem.getMenuItem().getId());
 
-			
 			responses.add(response);
 		}
 		return responses;
 	}
+	@Transactional
+	@Override
+	public String updateCartItemQuantity(int cartId, int cartItemId, int quantity) {
 
+		if (quantity <= 0) {
+			throw new CartItemServiceException("Quantity must be greater than 0", HttpStatus.BAD_REQUEST);
+		}
+
+		String query = "UPDATE cart_items SET quantity = :quantity " + "WHERE cart_item_id = :cartItemId "
+				+ "AND cart_id = :cartId";
+
+		int result = entityManager.createNativeQuery(query).setParameter("quantity", quantity)
+				.setParameter("cartItemId", cartItemId).setParameter("cartId", cartId).executeUpdate();
+
+		if (result == 0) {
+			throw new CartItemServiceException("CartItem does not exist in the specified Cart", HttpStatus.NOT_FOUND);
+			
+		}
+		return "Cart item updated successfully for CartItem Id : "
+        + cartItemId;
+
+	}
+	
 }
