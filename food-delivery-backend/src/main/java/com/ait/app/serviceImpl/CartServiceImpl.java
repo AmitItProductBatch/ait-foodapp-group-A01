@@ -1,5 +1,6 @@
 package com.ait.app.serviceImpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,10 @@ import com.ait.app.repository.CartRepository;
 import com.ait.app.repository.UserRepository;
 import com.ait.app.service.CartService;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+
 @Service
 public class CartServiceImpl implements CartService {
 
@@ -24,6 +29,9 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
 	public void createCart(int uId, CartDto dto) {
@@ -82,6 +90,43 @@ public class CartServiceImpl implements CartService {
 		dto.setUserId(c.getUser().getUserId());
 
 		return dto;
+	}
+
+	@Override
+	@Transactional
+	public Cart updateCart(int cartId, int userId) {
+
+		Optional<Cart> optional = cartRepository.findByCartIdAndUser_UserId(cartId, userId);
+
+		if (optional.isEmpty()) {
+			throw new CartServiceException("Cart not found for id " + cartId + " for user id " + userId,
+					HttpStatus.NOT_FOUND);
+		}
+
+		Cart cart = optional.get();
+
+//	    i have to add  native Query in cartIteamRepositry once complete it
+//	    double totalAmount =
+//	            cartItemRepository.calculateTotalAmount(cartId);
+
+		cart.setTotalAmount(0.0);
+
+		return cartRepository.save(cart);
+	}
+
+	@Override
+	public void deleteFromCart(int cId) {
+
+		Optional<Cart> optional = cartRepository.findById(cId);
+
+		if (optional.isEmpty()) {
+			throw new CartServiceException("Cart not found for id " + cId, HttpStatus.NOT_FOUND);
+		}
+
+		Cart cart = optional.get();
+
+		cartRepository.deleteById(cart.getCartId());
+
 	}
 
 }
