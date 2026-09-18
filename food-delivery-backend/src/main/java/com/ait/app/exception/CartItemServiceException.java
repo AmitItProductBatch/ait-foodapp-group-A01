@@ -9,6 +9,7 @@ public class CartItemServiceException extends RuntimeException{
 	public CartItemServiceException( String message,HttpStatus httpStatus) {
 		super();
 		this.message = message;
+		
 		this.httpStatus = httpStatus;
 	}
 	public CartItemServiceException(String message) {

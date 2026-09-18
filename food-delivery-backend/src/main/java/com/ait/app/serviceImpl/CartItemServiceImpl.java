@@ -79,8 +79,10 @@ public class CartItemServiceImpl implements CartItemService {
 			response.setQuantity(cartItem.getQuantity());
 			response.setMenuItemId(cartItem.getMenuItem().getId());
 
+			
 			responses.add(response);
 		}
+		
 
 		return responses;
 	}

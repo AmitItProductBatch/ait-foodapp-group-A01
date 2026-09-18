@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class CartResponseDto {
 	
 	private int cartId;
+	
 	private double totalAmount;
 	
 	

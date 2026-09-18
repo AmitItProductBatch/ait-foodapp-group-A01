@@ -7,7 +7,9 @@ public class CartItemRequest {
     private int quantity;
 
 	public long getMenuItemId() {
+		
 		return menuItemId;
+		
 	}
 
 	public void setMenuItemId(long menuItemId) {

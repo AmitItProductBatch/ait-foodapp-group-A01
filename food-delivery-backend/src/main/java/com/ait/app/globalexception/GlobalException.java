@@ -56,8 +56,6 @@ public class GlobalException {
 		return new ResponseEntity(ct.getMessage(), ct.getHttpStatus());
 		
 	}
-
-	
 	
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity UserExceptionHandler(Exception e) {
