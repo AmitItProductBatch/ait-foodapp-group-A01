@@ -51,6 +51,7 @@ public class GlobalException {
 		return new ResponseEntity(ce.getMessage(), ce.getHttpStatus());
 
 	}
+	
 	@ExceptionHandler(CartItemServiceException.class )
 	public ResponseEntity CartItemServiceExceptionHandler(CartItemServiceException ct) {
 		return new ResponseEntity(ct.getMessage(), ct.getHttpStatus());

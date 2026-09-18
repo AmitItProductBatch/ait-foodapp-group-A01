@@ -82,8 +82,6 @@ public class CartItemServiceImpl implements CartItemService {
 			
 			responses.add(response);
 		}
-		
-
 		return responses;
 	}
 

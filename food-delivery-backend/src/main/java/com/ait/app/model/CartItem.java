@@ -11,9 +11,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "cart_items")
+
 public class CartItem {
-	
-	
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cartItemId;
@@ -28,6 +28,7 @@ public class CartItem {
     
     @Column(nullable = false)
     private int quantity;
+    
 
 	public int getCartItemId() {
 		return cartItemId;

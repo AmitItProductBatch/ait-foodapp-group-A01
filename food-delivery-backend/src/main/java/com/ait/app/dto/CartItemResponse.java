@@ -6,6 +6,7 @@ public class CartItemResponse {
 	private int cartId;
     private long menuItemId;
     private int quantity;
+    
 	public int getCartItemId() {
 		return cartItemId;
 	}

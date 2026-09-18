@@ -6,6 +6,7 @@ public class CartItemRequest {
 	
     private int quantity;
 
+    
 	public long getMenuItemId() {
 		
 		return menuItemId;
