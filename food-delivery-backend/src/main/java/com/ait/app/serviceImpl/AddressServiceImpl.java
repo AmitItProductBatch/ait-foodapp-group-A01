@@ -17,6 +17,8 @@ import com.ait.app.model.Users;
 import com.ait.app.repository.AddressRepository;
 import com.ait.app.repository.UserRepository;
 import com.ait.app.service.AddressService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,6 +27,8 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class AddressServiceImpl implements AddressService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AddressServiceImpl.class);
 
 	@Autowired
 	private AddressRepository addressRepository;
@@ -37,6 +41,7 @@ public class AddressServiceImpl implements AddressService {
 
 	@Override
 	public AddressResponseDto createAddress(int userId, AddressDto addressDto) {
+		logger.info("Creating loggers for userId :"+userId);
 		Users user = userRepository.findById(userId)
 				.orElseThrow(() -> new UserServiceException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -51,7 +56,7 @@ public class AddressServiceImpl implements AddressService {
 		address.setUser(user);
 
 		Address savedAddress = addressRepository.save(address);
-
+		logger.info("Address saved with address id :"+savedAddress.getAddressId());
 		AddressResponseDto response = new AddressResponseDto();
 		response.setAddressId(savedAddress.getAddressId());
 		response.setLabel(savedAddress.getLabel());
@@ -64,6 +69,8 @@ public class AddressServiceImpl implements AddressService {
 
 	@Override
 	public List<AddressResponseDto> getAllAddresses(int userId) {
+		
+		logger.info("Fatching all addresses for User id :"+userId);
 		userRepository.findById(userId)
 				.orElseThrow(() -> new UserServiceException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -82,25 +89,29 @@ public class AddressServiceImpl implements AddressService {
 
 	@Override
 	public AddressResponseDto getAddress(int userId, int addressId) {
+		
+		logger.info("Faching address for user id :"+userId+"address id :"+addressId);
 		Address address = addressRepository.findByAddressIdAndUser_UserId(addressId, userId)
 				.orElseThrow(() -> new UserServiceException(HttpStatus.NOT_FOUND, "Address not found"));
-
+		
 		AddressResponseDto response = new AddressResponseDto();
 		response.setAddressId(address.getAddressId());
 		response.setLabel(address.getLabel());
 		response.setStreet(address.getStreet());
 		response.setCity(address.getCity());
 		response.setPostalCode(address.getPostalCode());
-
+		
 		return response;
 	}
 
 	@Override
 	@Transactional
 	public Address updateAddress(int addressid, int userId, AddressDto dto) {
+		
+		logger.info("updating address for user id :"+userId+"address Id :"+addressid);
 		Optional<Address> optional = addressRepository.findByAddressIdAndUserUserId(addressid, userId);
-
 		if (optional.isEmpty()) {
+			logger.info("Address not found for Address Id :"+addressid+"User Id :"+userId);
 			throw new AddressServiceException("Address not found for id " + addressid + " for user id " + userId,
 					HttpStatus.NOT_FOUND);
 		}
@@ -187,25 +198,32 @@ public class AddressServiceImpl implements AddressService {
 		query.executeUpdate();
 
 		entityManager.clear();
+		
+		logger.info("Address updated Successfully for address id :"+addressid+"user id"+userId);
 
 		return entityManager.find(Address.class, addressid);
 	}
 
 	@Override
 	public void deleteAddressByA_IdAndU_Id(int addressId, int userId) {
+		logger.info("delete address for address id :"+addressId+"user id :"+userId);
 		Optional<Users> optionalUser = userRepository.findById(userId);
-
+	
 		if (optionalUser.isEmpty()) {
+			logger.error("user not found for user id :"+userId);
+
 			throw new UserServiceException(HttpStatus.NOT_FOUND, "User not found for id " + userId);
 		}
 
 		Optional<Address> optionalAddress = addressRepository.findByAddressIdAndUserUserId(addressId, userId);
-
 		if (optionalAddress.isEmpty()) {
+			logger.error("address not found address id :"+addressId);
 			throw new AddressServiceException(
 					"Address not found for addressId: " + addressId + " and userId: " + userId, HttpStatus.NOT_FOUND);
 		}
 
 		addressRepository.delete(optionalAddress.get());
+		logger.info("address deleted successfully for address id :"+addressId+"user id :"+userId);
+
 	}
 }
