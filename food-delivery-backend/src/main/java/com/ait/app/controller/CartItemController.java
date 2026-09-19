@@ -50,4 +50,10 @@ public class CartItemController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+
+@GetMapping("/menuItem/{menuItemId}")
+public ResponseEntity<List<CartItemResponse>> getCartItemsByMenuItemId(@PathVariable long menuItemId) {
+	List<CartItemResponse> response = cartItemService.getCartItemsByMenuItemId(menuItemId);
+	return new ResponseEntity<>(response, HttpStatus.OK);
+}
 }

@@ -13,4 +13,5 @@ public interface CartItemService {
 
 	String updateCartItemQuantity(int cartId, int cartItemId, int quantity);
 
+	List<CartItemResponse> getCartItemsByMenuItemId(long menuItemId);
 }

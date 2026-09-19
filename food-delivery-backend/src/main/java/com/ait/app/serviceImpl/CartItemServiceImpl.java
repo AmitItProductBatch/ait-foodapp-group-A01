@@ -114,5 +114,29 @@ public class CartItemServiceImpl implements CartItemService {
         + cartItemId;
 
 	}
-	
+
+
+	@Override
+public List<CartItemResponse> getCartItemsByMenuItemId(long menuItemId) {
+    if (!itemRepository.existsById(menuItemId)) {
+        throw new CartItemServiceException("menu item not found", HttpStatus.NOT_FOUND);
+    }
+
+    List<CartItem> cartItems = cartItemRepository.findByMenuItemId(menuItemId);
+
+    List<CartItemResponse> responses = new ArrayList<>();
+
+
+    for (CartItem cartItem : cartItems) 
+		{
+        CartItemResponse response = new CartItemResponse();
+    response.setCartItemId(cartItem.getCartItemId());
+        response.setCartId(cartItem.getCart().getCartId());
+        response.setMenuItemId(cartItem.getMenuItem().getId());
+    	response.setQuantity(cartItem.getQuantity());
+        responses.add(response);
+    }
+return responses;
+}
+
 }
