@@ -37,6 +37,7 @@ public class CartItemServiceImpl implements CartItemService {
 	@Autowired
 	EntityManager entityManager;
 
+	@Transactional
 	@Override
 	public CartItemResponse addItemToCart(int cartId, CartItemRequest request) {
 
@@ -57,6 +58,7 @@ public class CartItemServiceImpl implements CartItemService {
 		cartItem.setQuantity(request.getQuantity());
 
 		CartItem savedCartItem = cartItemRepository.save(cartItem);
+		recalculateCartTotal(cartId);
 
 		CartItemResponse response = new CartItemResponse();
 
@@ -84,7 +86,6 @@ public class CartItemServiceImpl implements CartItemService {
 
 			response.setCartItemId(cartItem.getCartItemId());
 			response.setCartId(cartItem.getCart().getCartId());
-
 			response.setQuantity(cartItem.getQuantity());
 			response.setMenuItemId(cartItem.getMenuItem().getId());
 
@@ -92,6 +93,7 @@ public class CartItemServiceImpl implements CartItemService {
 		}
 		return responses;
 	}
+
 	@Transactional
 	@Override
 	public String updateCartItemQuantity(int cartId, int cartItemId, int quantity) {
@@ -108,36 +110,52 @@ public class CartItemServiceImpl implements CartItemService {
 
 		if (result == 0) {
 			throw new CartItemServiceException("CartItem does not exist in the specified Cart", HttpStatus.NOT_FOUND);
-			
-		}
-		return "Cart item updated successfully for CartItem Id : "
-        + cartItemId;
 
+		}
+		recalculateCartTotal(cartId);
+		return "Cart item updated successfully for CartItem Id : " + cartItemId;
+	}
+	@Override
+	public List<CartItemResponse> getCartItemsByMenuItemId(long menuItemId) {
+		if (!itemRepository.existsById(menuItemId)) {
+			throw new CartItemServiceException("menu item not found", HttpStatus.NOT_FOUND);
+		}
+
+		List<CartItem> cartItems = cartItemRepository.findByMenuItemId(menuItemId);
+
+		List<CartItemResponse> responses = new ArrayList<>();
+
+		for (CartItem cartItem : cartItems) {
+			CartItemResponse response = new CartItemResponse();
+			response.setCartItemId(cartItem.getCartItemId());
+			response.setCartId(cartItem.getCart().getCartId());
+			response.setMenuItemId(cartItem.getMenuItem().getId());
+			response.setQuantity(cartItem.getQuantity());
+			responses.add(response);
+		}
+		return responses;
 	}
 
+	private void recalculateCartTotal(int cartId) {
 
-	@Override
-public List<CartItemResponse> getCartItemsByMenuItemId(long menuItemId) {
-    if (!itemRepository.existsById(menuItemId)) {
-        throw new CartItemServiceException("menu item not found", HttpStatus.NOT_FOUND);
-    }
+		Cart cart = cartRepository.findById(cartId).orElseThrow(
+				() -> new CartItemServiceException("Cart Not Found for Cart Id : " + cartId, HttpStatus.NOT_FOUND));
 
-    List<CartItem> cartItems = cartItemRepository.findByMenuItemId(menuItemId);
+		List<CartItem> cartItems = cartItemRepository.findByCartCartId(cartId);
 
-    List<CartItemResponse> responses = new ArrayList<>();
+		double totalAmount = 0.0;
 
+		for (CartItem cartItem : cartItems) {
 
-    for (CartItem cartItem : cartItems) 
-		{
-        CartItemResponse response = new CartItemResponse();
-    response.setCartItemId(cartItem.getCartItemId());
-        response.setCartId(cartItem.getCart().getCartId());
-        response.setMenuItemId(cartItem.getMenuItem().getId());
-    	response.setQuantity(cartItem.getQuantity());
-        responses.add(response);
-    }
-return responses;
-}
+			double price = cartItem.getMenuItem().getFullPrice();
+
+			totalAmount = totalAmount + (price * cartItem.getQuantity());
+		}
+
+		cart.setTotalAmount(totalAmount);
+
+		cartRepository.save(cart);
+	}
 
 @Override
 public String deleteCartItemFromCart(int cartId, int cartItemId) {
