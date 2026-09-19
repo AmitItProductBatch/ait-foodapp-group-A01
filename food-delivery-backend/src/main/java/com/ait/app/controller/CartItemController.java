@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,9 +51,16 @@ public class CartItemController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@GetMapping("/menuItem/{menuItemId}")
-	public ResponseEntity<List<CartItemResponse>> getCartItemsByMenuItemId(@PathVariable long menuItemId) {
-		List<CartItemResponse> response = cartItemService.getCartItemsByMenuItemId(menuItemId);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+
+@GetMapping("/menuItem/{menuItemId}")
+public ResponseEntity<List<CartItemResponse>> getCartItemsByMenuItemId(@PathVariable long menuItemId) {
+	List<CartItemResponse> response = cartItemService.getCartItemsByMenuItemId(menuItemId);
+	return new ResponseEntity<>(response, HttpStatus.OK);
+}
+
+@DeleteMapping("/{cartId}/items/{cartItemId}")
+public ResponseEntity<String> deleteCartItemFromCart(@PathVariable int cartId, @PathVariable int cartItemId) {
+    String response = cartItemService.deleteCartItemFromCart(cartId, cartItemId);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+}
 }

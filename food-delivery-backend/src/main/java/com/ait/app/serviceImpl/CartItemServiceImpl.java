@@ -157,4 +157,21 @@ public class CartItemServiceImpl implements CartItemService {
 		cartRepository.save(cart);
 	}
 
+@Override
+public String deleteCartItemFromCart(int cartId, int cartItemId) {
+
+    if (!cartRepository.existsById(cartId)) {
+        throw new CartItemServiceException("Cart Not Found", HttpStatus.NOT_FOUND);
+    }
+
+    CartItem cartItem = cartItemRepository.findByCartCartIdAndCartItemId(cartId, cartItemId)
+            .orElseThrow(() -> new CartItemServiceException("CartItem does not exist in the specified Cart", HttpStatus.NOT_FOUND));
+
+    cartItemRepository.delete(cartItem);
+
+    return "Cart item deleted successfully for CartItem Id: " + cartItemId;
+}
+
+
+
 }
