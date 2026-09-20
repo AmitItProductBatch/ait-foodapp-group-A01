@@ -2,6 +2,7 @@ package com.ait.app.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ait.app.dto.CartItemRequest;
 import com.ait.app.dto.CartItemResponse;
-import com.ait.app.serviceImpl.CartItemService;
-
 @RestController
 @RequestMapping("/api/carts")
 public class CartItemController {
 
 	@Autowired
-	CartItemService cartItemService;
+	com.ait.app.service.CartItemService cartItemService;
 
 	@PostMapping("/{cartId}/items")
 	public ResponseEntity<CartItemResponse> addItemToCart(@PathVariable int cartId,

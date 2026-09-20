@@ -20,6 +20,7 @@ import com.ait.app.model.MenuItem;
 import com.ait.app.repository.CartItemRepository;
 import com.ait.app.repository.CartRepository;
 import com.ait.app.repository.MenuItemRepository;
+import com.ait.app.service.CartItemService;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
