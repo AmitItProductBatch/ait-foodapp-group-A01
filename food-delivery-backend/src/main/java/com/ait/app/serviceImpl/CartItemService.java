@@ -1,4 +1,4 @@
-package com.ait.app.service;
+package com.ait.app.serviceImpl;
 
 import java.util.List;
 
