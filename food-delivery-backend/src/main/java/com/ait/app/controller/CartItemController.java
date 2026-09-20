@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ait.app.dto.CartItemRequest;
 import com.ait.app.dto.CartItemResponse;
+import com.ait.app.service.CartItemService;
 @RestController
 @RequestMapping("/api/carts")
 public class CartItemController {
-
-	@Autowired
-	com.ait.app.service.CartItemService cartItemService;
+    @Autowired
+	CartItemService cartItemService;
 
 	@PostMapping("/{cartId}/items")
 	public ResponseEntity<CartItemResponse> addItemToCart(@PathVariable int cartId,
