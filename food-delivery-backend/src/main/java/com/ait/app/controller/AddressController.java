@@ -29,11 +29,11 @@ public class AddressController {
     private AddressService addressService;
 
     @PostMapping("/{userId}/addresses")
-    public ResponseEntity<AddressResponseDto> createAddress(
+    public ResponseEntity createAddress(
             @PathVariable int userId, 
             @Valid @RequestBody AddressDto addressDto) {
-        AddressResponseDto createdAddress = addressService.createAddress(userId, addressDto);
-        return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
+        addressService.createAddress(userId, addressDto);
+        return new ResponseEntity<>( "Address Added Successfully", HttpStatus.CREATED);
     }
 
     @GetMapping("/{userId}/addresses")

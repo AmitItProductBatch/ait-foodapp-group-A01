@@ -7,7 +7,7 @@ import com.ait.app.dto.AddressResponseDto;
 import com.ait.app.model.Address;
 
 public interface AddressService {
-    AddressResponseDto createAddress(int userId, AddressDto addressDto);
+     void createAddress(int userId, AddressDto addressDto);
 
     List<AddressResponseDto> getAllAddresses(int userId);
 
