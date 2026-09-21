@@ -6,15 +6,14 @@ import com.ait.app.dto.CartItemRequest;
 import com.ait.app.dto.CartItemResponse;
 
 public interface CartItemService {
-	
-	CartItemResponse addItemToCart(int cartId, CartItemRequest request);
 
-	List<CartItemResponse> getAllCartItemsByCartId(int cartId);
+    CartItemResponse addItemToCart(int cartId, CartItemRequest request);
 
-	String updateCartItemQuantity(int cartId, int cartItemId, int quantity);
+    List<CartItemResponse> getAllCartItemsByCartId(int cartId);
 
-	List<CartItemResponse> getCartItemsByMenuItemId(long menuItemId);
+    List<CartItemResponse> getCartItemsByMenuItemId(long menuItemId);
 
-	String deleteCartItemFromCart(int cartId, int cartItemId);
+    String updateCartItemQuantity(int cartId, int cartItemId, int quantity);
 
+    String deleteCartItemFromCart(int cartId, int cartItemId);
 }

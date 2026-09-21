@@ -2,11 +2,9 @@ package com.ait.app.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -128,8 +126,7 @@ public class CartItemServiceImpl implements CartItemService {
 			throw new CartItemServiceException("Quantity must be greater than 0", HttpStatus.BAD_REQUEST);
 		}
 
-		String query = "UPDATE cart_items SET quantity = :quantity " + "WHERE cart_item_id = :cartItemId "
-				+ "AND cart_id = :cartId";
+		String query = "UPDATE cart_items SET quantity = :quantity WHERE cart_item_id = :cartItemId AND cart_id = :cartId";
 
 		int result = entityManager.createNativeQuery(query).setParameter("quantity", quantity)
 				.setParameter("cartItemId", cartItemId).setParameter("cartId", cartId).executeUpdate();
@@ -137,7 +134,6 @@ public class CartItemServiceImpl implements CartItemService {
 		if (result == 0) {
 			logger.error("CartItem not found for update. CartId: {}, CartItemId: {}", cartId, cartItemId);
 			throw new CartItemServiceException("CartItem does not exist in the specified Cart", HttpStatus.NOT_FOUND);
-
 		}
 		logger.info("CartItem quantity updated successfully. CartId: {}, CartItemId: {}, NewQuantity: {}", cartId,
 				cartItemId, quantity);
@@ -159,7 +155,6 @@ public class CartItemServiceImpl implements CartItemService {
 		List<CartItemResponse> responses = new ArrayList<>();
 
 		for (CartItem cartItem : cartItems) {
-
 			logger.debug("CartItem retrieved by MenuItem. CartId: {}, CartItemId: {}, MenuItemId: {}",
 					cartItem.getCart().getCartId(), cartItem.getCartItemId(), menuItemId);
 			CartItemResponse response = new CartItemResponse();
@@ -184,18 +179,16 @@ public class CartItemServiceImpl implements CartItemService {
 		double totalAmount = 0.0;
 
 		for (CartItem cartItem : cartItems) {
-
 			double price = cartItem.getMenuItem().getFullPrice();
-
 			totalAmount = totalAmount + (price * cartItem.getQuantity());
 		}
 
 		cart.setTotalAmount(totalAmount);
-
 		cartRepository.save(cart);
 		logger.info("Cart total recalculated successfully. CartId: {}, TotalAmount: {}", cartId, totalAmount);
 	}
 
+	@Transactional
 	@Override
 	public String deleteCartItemFromCart(int cartId, int cartItemId) {
 		logger.info("Deleting CartItem. CartId: {}, CartItemId: {}", cartId, cartItemId);
@@ -213,7 +206,8 @@ public class CartItemServiceImpl implements CartItemService {
 		logger.info("CartItem deleted successfully. CartId: {}, CartItemId: {}, MenuItemId: {}", cartId, cartItemId,
 				cartItem.getMenuItem().getId());
 
+		recalculateCartTotal(cartId);
+
 		return "Cart item deleted successfully for CartItem Id: " + cartItemId;
 	}
-
 }
