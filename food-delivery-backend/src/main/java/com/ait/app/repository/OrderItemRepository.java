@@ -7,5 +7,6 @@ import com.ait.app.model.OrderItem;
 public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
 
 	List<OrderItem> findByOrderOrderId(int orderId);
+	
 
 }

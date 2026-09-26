@@ -3,8 +3,9 @@ package com.ait.app.dto;
 public class OrderRequest {
 
     private int addressId;
+   
 
-    public int getAddressId() {
+	public int getAddressId() {
         return addressId;
     }
 
