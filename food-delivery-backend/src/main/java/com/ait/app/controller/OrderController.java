@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.ait.app.dto.OrderRequest;
 import com.ait.app.dto.OrderResponse;
 import com.ait.app.dto.OrderSummaryResponse;
+import com.ait.app.enums.OrderStatus;
 import com.ait.app.service.OrderService;
 
 @RestController
@@ -42,4 +43,42 @@ public class OrderController {
 
 		return ResponseEntity.ok(response);
 	}
+	@PatchMapping("/{orderId}/status/{status}")
+	public ResponseEntity updateOrderStatus(
+	        @PathVariable int orderId,
+	        @PathVariable OrderStatus status) {
+
+	    OrderResponse response =
+	            orderService.updateOrderStatus(orderId, status);
+
+	    return new ResponseEntity("Order Status Updated",HttpStatus.OK);
+	}
+	 
+	 @GetMapping("/status/{status}")
+	    public ResponseEntity<List<OrderSummaryResponse>> getOrdersByStatus(
+	            @PathVariable OrderStatus status) {
+
+	        List<OrderSummaryResponse> response =
+	                orderService.getOrdersByStatus(status);
+
+	        return ResponseEntity.ok(response);
+	    }
+	 
+	 @PatchMapping("/{orderId}/cancel")
+	    public ResponseEntity cancelOrder(
+	            @PathVariable int orderId) {
+
+	        OrderResponse response =
+	                orderService.cancelOrder(orderId);
+
+	        return new ResponseEntity("Order Cancled",HttpStatus.OK);
+	    }
+	  @DeleteMapping("/{orderId}")
+	    public ResponseEntity deleteOrder(
+	            @PathVariable int orderId) {
+
+	        orderService.deleteOrder(orderId);
+
+	        return new ResponseEntity("Order  deleted",HttpStatus.OK);
+	    }
 }

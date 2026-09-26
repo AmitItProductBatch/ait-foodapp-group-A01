@@ -10,5 +10,11 @@ public interface OrderItemService {
 	OrderItemResponse getOrderItemById(int orderItemId);
 
 	List<OrderItemResponse> getAllOrderItemsByOrderId(int orderId);
+	
+	OrderItemResponse updateOrderItemQuantity(int orderId, int orderItemId, int quantity);
+
+	void deleteOrderItem(int orderItemId);
+
+	void deleteAllOrderItems(int orderId);
 
 }

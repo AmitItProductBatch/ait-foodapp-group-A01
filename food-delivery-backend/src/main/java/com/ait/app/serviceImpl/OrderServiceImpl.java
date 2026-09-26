@@ -164,6 +164,140 @@ public class OrderServiceImpl implements OrderService {
 		return responseList;
 	}
 
+	@Override
+	@Transactional
+	public OrderResponse updateOrderStatus(int orderId, OrderStatus status) {
+
+		logger.info("Updating order status for order id: {} to status: {}", orderId, status);
+
+		Order order = orderRepository.findById(orderId).orElseThrow(() -> {
+
+			logger.error("Order not found with id: {}", orderId);
+
+			return new OrderServiceException("Order not found with id: " + orderId, HttpStatus.NOT_FOUND);
+		});
+
+		if (status == null) {
+
+			logger.error("Order status cannot be null");
+
+			throw new OrderServiceException("Order status cannot be null", HttpStatus.BAD_REQUEST);
+		}
+
+		if (order.getOrderStatus() == OrderStatus.CANCELLED) {
+
+			logger.error("Cancelled order cannot be updated. Order id: {}", orderId);
+
+			throw new OrderServiceException("Cancelled order cannot be updated", HttpStatus.BAD_REQUEST);
+		}
+
+		if (order.getOrderStatus() == OrderStatus.DELIVERED) {
+
+			logger.error("Delivered order cannot be updated. Order id: {}", orderId);
+
+			throw new OrderServiceException("Delivered order cannot be updated", HttpStatus.BAD_REQUEST);
+		}
+
+		order.setOrderStatus(status);
+
+		Order updatedOrder = orderRepository.save(order);
+
+		logger.info("Order status updated successfully. Order id: {}, New Status: {}", orderId,
+				updatedOrder.getOrderStatus());
+
+		return convertToOrderResponse(updatedOrder);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<OrderSummaryResponse> getOrdersByStatus(OrderStatus status) {
+
+		logger.info("Fetching orders with status: {}", status);
+
+		if (status == null) {
+
+			throw new OrderServiceException("Order status cannot be null", HttpStatus.BAD_REQUEST);
+		}
+
+		List<Order> orders = orderRepository.findByOrderStatus(status);
+
+		if (orders.isEmpty()) {
+
+			logger.info("No orders found with status: {}", status);
+
+			throw new OrderServiceException("No orders found with status: " + status, HttpStatus.NOT_FOUND);
+		}
+
+		List<OrderSummaryResponse> responseList = new ArrayList<>();
+
+		for (Order order : orders) {
+
+			OrderSummaryResponse response = new OrderSummaryResponse();
+
+			response.setOrderId(order.getOrderId());
+			response.setTotalAmount(order.getTotalAmount());
+			response.setOrderStatus(order.getOrderStatus().name());
+			response.setPaymentStatus(order.getPaymentStatus().name());
+			response.setOrderDate(order.getOrderDate());
+
+			responseList.add(response);
+		}
+
+		logger.info("Fetched {} orders with status: {}", orders.size(), status);
+
+		return responseList;
+	}
+
+	@Override
+	@Transactional
+	public OrderResponse cancelOrder(int orderId) {
+
+		logger.info("Cancelling order with id: {}", orderId);
+
+		Order order = orderRepository.findById(orderId).orElseThrow(() -> {
+
+			logger.error("Order not found with id: {}", orderId);
+
+			return new OrderServiceException("Order not found with id: " + orderId, HttpStatus.NOT_FOUND);
+		});
+
+		if (order.getOrderStatus() == OrderStatus.CANCELLED) {
+
+			throw new OrderServiceException("Order is already cancelled", HttpStatus.BAD_REQUEST);
+		}
+
+		if (order.getOrderStatus() == OrderStatus.DELIVERED) {
+
+			throw new OrderServiceException("Delivered order cannot be cancelled", HttpStatus.BAD_REQUEST);
+		}
+
+		order.setOrderStatus(OrderStatus.CANCELLED);
+
+		Order cancelledOrder = orderRepository.save(order);
+
+		logger.info("Order cancelled successfully. Order id: {}", orderId);
+
+		return convertToOrderResponse(cancelledOrder);
+	}
+
+	@Override
+	@Transactional
+	public void deleteOrder(int orderId) {
+
+		logger.info("Deleting order with id: {}", orderId);
+
+		Order order = orderRepository.findById(orderId).orElseThrow(() -> {
+
+			logger.error("Order not found with id: {}", orderId);
+
+			return new OrderServiceException("Order not found with id: " + orderId, HttpStatus.NOT_FOUND);
+		});
+
+		orderRepository.delete(order);
+
+		logger.info("Order deleted successfully. Order id: {}", orderId);
+	}
+
 	private OrderResponse convertToOrderResponse(Order order) {
 
 		OrderResponse response = new OrderResponse();
@@ -193,4 +327,5 @@ public class OrderServiceImpl implements OrderService {
 
 		return response;
 	}
+
 }
