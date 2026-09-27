@@ -74,8 +74,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
 		logger.info("Order item saved successfully. orderItemId: {}", savedItem.getOrderItemId());
 
-		// Update order total
-		updateOrderTotal(order);
+ 		updateOrderTotal(order);
 
 		return convertToResponse(savedItem);
 	}
