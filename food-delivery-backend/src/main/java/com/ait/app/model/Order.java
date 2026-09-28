@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -49,6 +50,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
+    
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+	private Payment payment;
 
     
 //	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
