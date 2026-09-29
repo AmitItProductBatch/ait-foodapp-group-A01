@@ -1,6 +1,7 @@
 package com.ait.app.model;
 
 import jakarta.persistence.Entity;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,6 +30,9 @@ private List<Address> addresses;
 	
 	@OneToOne(mappedBy = "user")
 	private Cart cart;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Rating> ratings;
 	
 	public Cart getCart() {
 		return cart;
@@ -96,6 +100,15 @@ private List<Address> addresses;
 	public void setRestaurants(List<Restaurant> restaurants) {
 	    this.restaurants = restaurants;
 	}
+
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
+	
 
 
 }

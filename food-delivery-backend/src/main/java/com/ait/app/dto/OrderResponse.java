@@ -26,9 +26,10 @@ public class OrderResponse {
     private String paymentStatus;
 
     private LocalDateTime orderDate;
+    private long ratingId;
+    private int ratingValue;
 
-   // private List<OrderItemResponse> orderItems;
-
+   
     public int getOrderId() {
         return orderId;
     }
@@ -156,12 +157,23 @@ public class OrderResponse {
     public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
-//
-//    public List<OrderItemResponse> getOrderItems() {
-//        return orderItems;
-//    }
-//
-//    public void setOrderItems(List<OrderItemResponse> orderItems) {
-//        this.orderItems = orderItems;
-//    }
+
+	public long getRatingId() {
+		return ratingId;
+	}
+
+	public void setRatingId(long ratingId) {
+		this.ratingId = ratingId;
+	}
+
+	public int getRatingValue() {
+		return ratingValue;
+	}
+
+	public void setRatingValue(int ratingValue) {
+		this.ratingValue = ratingValue;
+	}
+    
+    
+
 }
