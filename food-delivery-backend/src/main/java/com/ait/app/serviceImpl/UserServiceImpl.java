@@ -2,6 +2,8 @@ package com.ait.app.serviceImpl;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ import jakarta.persistence.Query;
 
 @Service
 public class UserServiceImpl implements UserService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	private final GlobalException globalException;
 
@@ -37,36 +41,47 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDto registerUser(UsersDto dto) {
+		
+		logger.info("User registration started");
 
 		if (dto.getFullName() == null || dto.getFullName().isBlank()) {
+			logger.warn("User registration failed: full name is missing");
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Full name is required");
 		}
 
 		if (dto.getEmail() == null || dto.getEmail().isBlank()) {
+			logger.warn("User registration failed: email is missing");
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Email is required");
 		}
 
 		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
 		if (!dto.getEmail().matches(emailRegex)) {
+			logger.warn("User registration failed: invalid email format");
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Invalid email format");
 		}
 
 		Optional<Users> optEmail = userRepository.findByEmail(dto.getEmail());
 
 		if (optEmail.isPresent()) {
-			throw new UserServiceException(HttpStatus.CONFLICT, "Email already registered");
+			logger.warn("User registration failed: email already registered");
+			throw new UserServiceException(HttpStatus.CONFLICT, "email registered already");
 		}
+
 		if (userRepository.existsByPhoneNo(dto.getPhoneNo())) {
-			throw new UserServiceException(HttpStatus.CONFLICT, "Phone number already registered");
+			logger.warn("User registration failed: phone number already registered");
+			throw new UserServiceException(HttpStatus.CONFLICT, "phone number already registered");
 		}
+
 		if (dto.getPassword() == null || dto.getPassword().isBlank()) {
+			logger.warn("User registration failed: password is missing");
 			throw new UserServiceException(HttpStatus.BAD_REQUEST, "Password is required");
 		}
 
 		String passwordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$";
 
 		if (!dto.getPassword().matches(passwordRegex)) {
+			logger.warn("User registration failed: password validation failed");
 			throw new UserServiceException(HttpStatus.BAD_REQUEST,
 					"Password must contain uppercase, lowercase, number, special character and minimum 8 characters");
 		}
@@ -80,6 +95,7 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(dto.getPassword());
 
 		Users savedUser = userRepository.save(user);
+		logger.info("User created successfully with userId: {}", savedUser.getUserId());
 
 		UserResponseDto response = new UserResponseDto();
 		response.setUserId(savedUser.getUserId());
@@ -92,10 +108,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDto getUserDetails(int id) {
+		
+		logger.info("Fetching user details for userId: {}", id);
+
 
 		Optional<Users> o = userRepository.findById(id);
 
 		if (o.isEmpty()) {
+			logger.warn("User not found for userId: {}", id);
 			throw new UserServiceException(HttpStatus.NOT_FOUND, "Please Enter Valid User ID!");
 		}
 
@@ -107,6 +127,9 @@ public class UserServiceImpl implements UserService {
 		userResponseDto.setFullName(user.getFullName());
 		userResponseDto.setPhoneNo(user.getPhoneNo());
 		userResponseDto.setEmail(user.getEmail());
+		
+		logger.info("User details retrieved successfully for userId: {}", id);
+
 
 		return userResponseDto;
 	}
@@ -114,10 +137,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public Users updateUserById(int id, UpdateUserDto dto) {
+		
+		logger.info("User update started for userId: {}", id);
 
 		Optional<Users> optional = userRepository.findById(id);
 
 		if (optional.isEmpty()) {
+			logger.warn("User update failed: user not found for userId: {}", id);
 			throw new UserServiceException(HttpStatus.NOT_FOUND, "User is not found for id " + id);
 		}
 
@@ -140,6 +166,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (!hasUpdate) {
+			logger.info("No fields to update for userId: {}", id);
 			return optional.get();
 		}
 
@@ -166,21 +193,28 @@ public class UserServiceImpl implements UserService {
 		query.executeUpdate();
 
 		entityManager.clear();
+		logger.info("User updated successfully for userId: {}", id);
 
 		return entityManager.find(Users.class, id);
 	}
 
 	@Override
 	public UserResponseDto deleteUserByID(int id, UsersDto dto) {
+		
+		logger.info("User deletion started for userId: {}", id);
+		
 		Optional<Users> optional = userRepository.findById(id);
 
 		if (optional.isEmpty()) {
+			logger.warn("User deletion failed: user not found for userId: {}", id);
 			throw new UserServiceException(HttpStatus.NOT_FOUND, "User is not found for id: " + id);
 		}
 
 		Users user = optional.get();
 
 		if (!user.getEmail().equals(dto.getEmail()) || !user.getPassword().equals(dto.getPassword())) {
+			
+			logger.warn("User deletion failed: invalid credentials for userId: {}", id);
 
 			throw new UserServiceException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
 		}
@@ -193,6 +227,8 @@ public class UserServiceImpl implements UserService {
 		response.setPhoneNo(user.getPhoneNo());
 
 		userRepository.deleteById(id);
+		
+		logger.info("User deleted successfully for userId: {}", id);
 
 		return response;
 	}

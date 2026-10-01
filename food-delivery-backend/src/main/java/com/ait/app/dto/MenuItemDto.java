@@ -1,40 +1,28 @@
 package com.ait.app.dto;
 
+import com.ait.app.enums.FoodType;
+
 public class MenuItemDto {
 
     private String name;
     private String description;
-    private String type;
-    public String getType() {
-		return type;
+    private FoodType type;
+    private long restaurantId;
+    private double halfPrice;
+    private double fullPrice;
+    private boolean available;
+    private int categoryId;
+    
+
+    public int getCategoryId() {
+		return categoryId;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
 	}
 
-	private double halfPrice;
-	private double fullPrice;
-	private boolean available;
-    public double getHalfPrice() {
-		return halfPrice;
-	}
-
-	public void setHalfPrice(double halfPrice) {
-		this.halfPrice = halfPrice;
-	}
-
-	public double getFullPrice() {
-		return fullPrice;
-	}
-
-	public void setFullPrice(double fullPrice) {
-		this.fullPrice = fullPrice;
-	}
-
-	
-
-    public String getName() {
+	public String getName() {
         return name;
     }
 
@@ -50,7 +38,42 @@ public class MenuItemDto {
         this.description = description;
     }
 
+    public FoodType getType() {
+        return type;
+    }
+
+    public void setType(FoodType type) {
+        this.type = type;
+    }
+
     
+
+    public long getRestaurantId() {
+		return restaurantId;
+	}
+
+	
+	
+
+	public void setRestaurantId(long restaurantId) {
+		this.restaurantId = restaurantId;
+	}
+
+	public double getHalfPrice() {
+        return halfPrice;
+    }
+
+    public void setHalfPrice(double halfPrice) {
+        this.halfPrice = halfPrice;
+    }
+
+    public double getFullPrice() {
+        return fullPrice;
+    }
+
+    public void setFullPrice(double fullPrice) {
+        this.fullPrice = fullPrice;
+    }
 
     public boolean isAvailable() {
         return available;
