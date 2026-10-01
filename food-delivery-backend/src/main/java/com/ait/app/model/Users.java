@@ -30,6 +30,17 @@ private List<Address> addresses;
 	@OneToOne(mappedBy = "user")
 	private Cart cart;
 	
+	@OneToMany(mappedBy = "user")
+	private List<Rating> ratings;
+	
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
+
 	public Cart getCart() {
 		return cart;
 	}

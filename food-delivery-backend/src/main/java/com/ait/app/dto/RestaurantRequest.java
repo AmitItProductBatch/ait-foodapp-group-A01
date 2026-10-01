@@ -24,11 +24,12 @@ public class RestaurantRequest {
 	public RestaurantRequest() {
 	}
 
-	public RestaurantRequest(String name, String address, String country, String contactDetails) {
+	public RestaurantRequest(String name, String address, String country, String contactDetails,int userId) {
 		this.name = name;
 		this.address = address;
 		this.country = country;
 		this.contactDetails = contactDetails;
+		this.userId = userId;
 	}
 	
 
