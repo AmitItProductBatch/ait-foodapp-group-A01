@@ -53,6 +53,9 @@ public class Order {
     
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 	private Payment payment;
+    
+    @OneToOne(mappedBy = "order")
+    private Rating rating;
 
     
 //	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -113,6 +116,16 @@ public class Order {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+	public Rating getRating() {
+		return rating;
+	}
+
+	public void setRating(Rating rating) {
+		this.rating = rating;
+	}
+    
+    
 
 //    public List<OrderItem> getOrderItems() {
 //        return orderItems;
