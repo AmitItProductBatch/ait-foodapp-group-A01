@@ -21,6 +21,7 @@ import com.ait.app.model.Address;
 import com.ait.app.model.Cart;
 import com.ait.app.model.CartItem;
 import com.ait.app.model.Order;
+import com.ait.app.model.Rating;
 import com.ait.app.model.Users;
 import com.ait.app.repository.AddressRepository;
 import com.ait.app.repository.CartItemRepository;
@@ -98,6 +99,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setOrderDate(LocalDateTime.now());
 		order.setOrderStatus(OrderStatus.PLACED);
 		order.setPaymentStatus(PaymentStatus.PENDING);
+		order.setRating(null);
 
 		Order savedOrder = orderRepository.save(order);
 
@@ -324,6 +326,7 @@ public class OrderServiceImpl implements OrderService {
 		response.setCity(address.getCity());
 		response.setPostalCode(address.getPostalCode());
 		response.setDeliveryInstructions(address.getDeliveryInstructions());
+		Rating rating = order.getRating();
 
 		return response;
 	}
