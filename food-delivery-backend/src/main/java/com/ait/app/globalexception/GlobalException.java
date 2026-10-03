@@ -10,6 +10,7 @@ import com.ait.app.exception.AddressServiceException;
 import com.ait.app.exception.CartItemServiceException;
 import com.ait.app.exception.CartServiceException;
 import com.ait.app.exception.CategoryServiceException;
+import com.ait.app.exception.FeedbackServiceException;
 import com.ait.app.exception.MenuItemServiceException;
 import com.ait.app.exception.RestaurantServiceException;
 import com.ait.app.exception.OrderServiceException;
@@ -77,6 +78,13 @@ public class GlobalException {
 	public ResponseEntity RatingServiceExceptionHamdler(RatingServiceException re) {
 		
 		return new ResponseEntity(re.getMessage(),re.getStatus());
+		
+	} 
+	
+	@ExceptionHandler(FeedbackServiceException.class)
+	public ResponseEntity RatingServiceExceptionHamdler(FeedbackServiceException fe) {
+		
+		return new ResponseEntity(fe.getMessage(),fe.getHttpStatus());
 		
 	} 
 	

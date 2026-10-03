@@ -2,5 +2,5 @@ package com.ait.app.enums;
 
 public enum PaymentMethod {
 	
-	COD, UPI, CARD, NET_BANKING
+	COD, UPI, CARD, NET_BANKING 
 }
