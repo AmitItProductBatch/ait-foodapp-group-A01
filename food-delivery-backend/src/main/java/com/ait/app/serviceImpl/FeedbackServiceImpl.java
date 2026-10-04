@@ -3,10 +3,14 @@ package com.ait.app.serviceImpl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import com.ait.app.dto.FeedbackDto;
+import com.ait.app.dto.FeedbackResponseDto;
 import com.ait.app.exception.FeedbackServiceException;
 import com.ait.app.exception.OrderServiceException;
 import com.ait.app.exception.RestaurantServiceException;
@@ -90,6 +94,33 @@ public class FeedbackServiceImpl implements FeedbackService {
 				savedFeedback.getFeedbackId(), savedFeedback.getOrderId(), savedFeedback.getRestaurantId());
 
 		return savedFeedback;
+	}
+
+	@Override
+	public Page<FeedbackResponseDto> getFeedbackByRestaurantId(long restaurantId, int page, int size) {
+		log.info("getFeedbackByRestaurantId method execution started. restaurantId: {}, page: {}, size: {}",
+				restaurantId, page, size);
+
+		Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(restaurantId);
+		if (optionalRestaurant.isEmpty()) {
+			log.error("Restaurant not found for restaurantId: {}", restaurantId);
+			throw new RestaurantServiceException(HttpStatus.NOT_FOUND,
+					"Restaurant not found for id: " + restaurantId);
+		}
+		log.info("Restaurant found successfully for restaurantId: {}", restaurantId);
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Feedback> feedbackPage = feedbackRepository
+				.findByRestaurantIdAndIsDeletedFalseAndIsFlaggedFalse(restaurantId, pageable);
+		log.info("Found {} feedback entries for restaurantId: {}", feedbackPage.getTotalElements(), restaurantId);
+
+		Page<FeedbackResponseDto> responsePage = feedbackPage.map(feedback -> new FeedbackResponseDto(
+				feedback.getFeedbackId(),
+				feedback.getOrderId(),
+				feedback.getRestaurantId(),
+				feedback.getContent(),
+				feedback.getRating(),
+				feedback.getCreatedAt()));
+		return responsePage;
 	}
 
 }
