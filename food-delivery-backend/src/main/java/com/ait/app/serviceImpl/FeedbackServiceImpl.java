@@ -104,8 +104,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(restaurantId);
 		if (optionalRestaurant.isEmpty()) {
 			log.error("Restaurant not found for restaurantId: {}", restaurantId);
-			throw new RestaurantServiceException(HttpStatus.NOT_FOUND,
-					"Restaurant not found for id: " + restaurantId);
+			throw new RestaurantServiceException(HttpStatus.NOT_FOUND, "Restaurant not found for id: " + restaurantId);
 		}
 		log.info("Restaurant found successfully for restaurantId: {}", restaurantId);
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -113,14 +112,73 @@ public class FeedbackServiceImpl implements FeedbackService {
 				.findByRestaurantIdAndIsDeletedFalseAndIsFlaggedFalse(restaurantId, pageable);
 		log.info("Found {} feedback entries for restaurantId: {}", feedbackPage.getTotalElements(), restaurantId);
 
-		Page<FeedbackResponseDto> responsePage = feedbackPage.map(feedback -> new FeedbackResponseDto(
-				feedback.getFeedbackId(),
-				feedback.getOrderId(),
-				feedback.getRestaurantId(),
-				feedback.getContent(),
-				feedback.getRating(),
-				feedback.getCreatedAt()));
+		Page<FeedbackResponseDto> responsePage = feedbackPage
+				.map(feedback -> new FeedbackResponseDto(feedback.getFeedbackId(), feedback.getOrderId(),
+						feedback.getRestaurantId(), feedback.getContent(), feedback.getRating(),
+						feedback.getCreatedAt()));
 		return responsePage;
+	}
+
+	@Override
+	public Feedback updateFeedBack(int feedbackId, FeedbackDto dto) {
+
+		log.info("updateFeedBack method execution started. feedbackId: {}", feedbackId);
+
+		Optional<Feedback> optional = feedbackRepository.findById(feedbackId);
+
+		if (optional.isEmpty()) {
+			log.error("Feedback not found for feedbackId: {}", feedbackId);
+
+			throw new FeedbackServiceException("Feedback not found for feedback id: " + feedbackId,
+					HttpStatus.NOT_FOUND);
+		}
+
+		Feedback feedback = optional.get();
+
+		if (dto.getContent() == null || dto.getContent().isBlank()) {
+
+			log.error("Feedback content is null or blank");
+
+			throw new FeedbackServiceException("Content is Mandatory", HttpStatus.BAD_REQUEST);
+		}
+
+		if (dto.getRating() < 1 || dto.getRating() > 5) {
+
+			log.error("Invalid rating: {}", dto.getRating());
+
+			throw new FeedbackServiceException("Rating must be between 1 and 5", HttpStatus.BAD_REQUEST);
+		}
+
+		feedback.setContent(dto.getContent());
+		feedback.setRating(dto.getRating());
+
+		Feedback updatedFeedback = feedbackRepository.save(feedback);
+
+		log.info("Feedback updated successfully. feedbackId: {}", feedbackId);
+
+		return updatedFeedback;
+	}
+
+	@Override
+	public void deleteFeedBack(int feedbackId) {
+
+		log.info("deleteFeedBack method execution started. feedbackId: {}", feedbackId);
+
+		Optional<Feedback> optional = feedbackRepository.findById(feedbackId);
+
+		if (optional.isEmpty()) {
+
+			log.error("Feedback not found for feedbackId: {}", feedbackId);
+
+			throw new FeedbackServiceException("Feedback not found for feedback id: " + feedbackId,
+					HttpStatus.NOT_FOUND);
+		}
+
+		Feedback feedback = optional.get();
+
+		feedbackRepository.save(feedback);
+
+		log.info("Feedback deleted successfully. feedbackId: {}", feedbackId);
 	}
 
 }
