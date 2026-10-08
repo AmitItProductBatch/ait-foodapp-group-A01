@@ -1,6 +1,7 @@
 package com.ait.app.globalexception;
 
 import org.springframework.http.ResponseEntity;
+ 
 
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,7 +18,7 @@ import com.ait.app.exception.OrderServiceException;
 import com.ait.app.exception.PaymentServiceException;
 import com.ait.app.exception.RatingServiceException;
 import com.ait.app.exception.UserServiceException;
-
+import com.ait.app.exception.RoleServiceException;
 import org.springframework.http.HttpStatus;
 
 @ControllerAdvice
@@ -87,11 +88,17 @@ public class GlobalException {
 		return new ResponseEntity(fe.getMessage(),fe.getHttpStatus());
 		
 	} 
+	@ExceptionHandler(RoleServiceException.class)
+	public ResponseEntity RoleServiceException(RoleServiceException re) {
+		
+		return new ResponseEntity<>(re.getMsg(),re.getStatus());
+	}
 	
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity UserExceptionHandler(Exception e) {
 		return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 
 	}
-
+	
+	
 }
