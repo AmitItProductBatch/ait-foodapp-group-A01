@@ -1,9 +1,7 @@
 package com.ait.app.globalexception;
 
 import org.springframework.http.ResponseEntity;
- 
-
-
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -29,76 +27,81 @@ public class GlobalException {
 		return new ResponseEntity(ue.getMsg(), ue.getHttpStatusCode());
 
 	}
+
 	@ExceptionHandler(RestaurantServiceException.class)
 	public ResponseEntity handleRestaurantServiceException(RestaurantServiceException ex) {
 		return new ResponseEntity(ex.getMsg(), ex.getHttpStatusCode());
 	}
-	
+
 	@ExceptionHandler(value = MenuItemServiceException.class)
 	public ResponseEntity MenuItemExceptionHandler(MenuItemServiceException me) {
-		return new ResponseEntity(me.getMsg(),me.getHttpStatusCode());
+		return new ResponseEntity(me.getMsg(), me.getHttpStatusCode());
 	}
-	
 
 	@ExceptionHandler(value = AddressServiceException.class)
 	public ResponseEntity UserExceptionHandler(AddressServiceException ae) {
 		return new ResponseEntity(ae.getMessage(), ae.getHttpStatus());
 
 	}
-	
+
 	@ExceptionHandler(value = CategoryServiceException.class)
 	public ResponseEntity UserExceptionHandler(CategoryServiceException ce) {
 		return new ResponseEntity(ce.getMessage(), ce.getHttpStatus());
 
 	}
-	
+
 	@ExceptionHandler(value = CartServiceException.class)
 	public ResponseEntity UserExceptionHandler(CartServiceException ce) {
 		return new ResponseEntity(ce.getMessage(), ce.getHttpStatus());
 
 	}
-	
-	@ExceptionHandler(CartItemServiceException.class )
+
+	@ExceptionHandler(CartItemServiceException.class)
 	public ResponseEntity CartItemServiceExceptionHandler(CartItemServiceException ct) {
 		return new ResponseEntity(ct.getMessage(), ct.getHttpStatus());
-		
+
 	}
 
 	@ExceptionHandler(OrderServiceException.class)
 	public ResponseEntity OrderServiceExceptionHandler(OrderServiceException oe) {
 		return new ResponseEntity(oe.getMessage(), oe.getHttpStatus());
 	}
-	
 
 	@ExceptionHandler(PaymentServiceException.class)
 	public ResponseEntity OrderServiceExceptionHandler(PaymentServiceException pe) {
 		return new ResponseEntity(pe.getMessage(), pe.getHttpStatus());
 	}
-	
+
 	@ExceptionHandler(RatingServiceException.class)
 	public ResponseEntity RatingServiceExceptionHamdler(RatingServiceException re) {
-		
-		return new ResponseEntity(re.getMessage(),re.getStatus());
-		
-	} 
-	
+
+		return new ResponseEntity(re.getMessage(), re.getStatus());
+
+	}
+
 	@ExceptionHandler(FeedbackServiceException.class)
 	public ResponseEntity RatingServiceExceptionHamdler(FeedbackServiceException fe) {
-		
-		return new ResponseEntity(fe.getMessage(),fe.getHttpStatus());
-		
-	} 
+
+		return new ResponseEntity(fe.getMessage(), fe.getHttpStatus());
+
+	}
+
 	@ExceptionHandler(RoleServiceException.class)
 	public ResponseEntity RoleServiceException(RoleServiceException re) {
-		
-		return new ResponseEntity<>(re.getMsg(),re.getStatus());
+
+		return new ResponseEntity(re.getMsg(), re.getStatus());
 	}
-	
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity handleInvalidRequestBody(HttpMessageNotReadableException e) {
+
+		return new ResponseEntity("Invalid role name. Only ADMIN and USER are allowed", HttpStatus.BAD_REQUEST);
+	}
+
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity UserExceptionHandler(Exception e) {
 		return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 
 	}
-	
-	
+
 }
