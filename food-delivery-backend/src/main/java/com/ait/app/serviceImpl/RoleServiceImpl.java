@@ -35,6 +35,7 @@ public class RoleServiceImpl implements RoleService {
 		if (dto.getRoleName() == null) {
 			log.error("Role name is required");
 
+	
 			throw new RoleServiceException(HttpStatus.BAD_REQUEST, "Role name is required");
 		}
 
